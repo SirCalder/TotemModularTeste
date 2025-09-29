@@ -96,22 +96,71 @@ function render() {
 function renderWelcomeScreen() {
     return `
         <div class="screen" role="main" aria-labelledby="welcome-title">
+            <!-- Ilustração de boas-vindas com elementos orgânicos -->
             <div class="animate-fade-in-stagger-1">
-                <svg class="welcome-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6l4 2" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 22a10 10 0 110-20 10 10 0 010 20z" />
+                <svg class="hero-illustration" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="welcomeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#E9EFFF;stop-opacity:0.8" />
+                            <stop offset="100%" style="stop-color:#F8F4F2;stop-opacity:0.8" />
+                        </linearGradient>
+                        <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#80BBA2;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#5C5B7C;stop-opacity:0.8" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Formas orgânicas de fundo -->
+                    <ellipse cx="200" cy="150" rx="120" ry="80" fill="url(#welcomeGradient)"/>
+                    <path d="M80 200 Q200 160 320 200 Q340 220 320 240 Q200 280 80 240 Q60 220 80 200" fill="#5C5B7C" opacity="0.08"/>
+                    <!-- Sol estilizado -->
+                    <circle cx="200" cy="120" r="25" fill="url(#sunGradient)" class="icon-breathe"/>
+                    <g stroke="#80BBA2" stroke-width="2" opacity="0.6">
+                        <line x1="200" y1="80" x2="200" y2="70"/>
+                        <line x1="200" y1="170" x2="200" y2="160"/>
+                        <line x1="240" y1="120" x2="250" y2="120"/>
+                        <line x1="150" y1="120" x2="160" y2="120"/>
+                        <line x1="228" y1="92" x2="235" y2="85"/>
+                        <line x1="165" y1="148" x2="172" y2="155"/>
+                        <line x1="228" y1="148" x2="235" y2="155"/>
+                        <line x1="165" y1="92" x2="172" y2="85"/>
+                    </g>
                 </svg>
             </div>
-            <h1 id="welcome-title" class="animate-fade-in-stagger-2">Bem-vindo(a)</h1>
-            <p class="animate-fade-in-stagger-3">Selecione uma opção para começar sua jornada.</p>
-            <p class="subtitle animate-fade-in-stagger-3">Seu bem-estar é nossa prioridade</p>
+            
+            <h1 id="welcome-title" class="animate-fade-in-stagger-2">
+                <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+                Bem-vindo ao Amanhecer
+            </h1>
+            <p class="animate-fade-in-stagger-3">Selecione uma opção para começar sua jornada de bem-estar.</p>
+            <p class="subtitle animate-fade-in-stagger-3">Seu cuidado integral é nossa prioridade</p>
+            
             <div class="button-group animate-fade-in-stagger-4" role="group" aria-label="Opções principais">
                 <button class="primary-button" id="start-journey" aria-describedby="checkin-desc">
-                    ✓ Realizar Check-in
+                    <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <polyline points="20,6 9,17 4,12"/>
+                    </svg>
+                    Realizar Check-in
                 </button>
                 <span id="checkin-desc" class="sr-only">Faça check-in para sua consulta já agendada</span>
+                
                 <button class="secondary-button" id="start-scheduling" aria-describedby="schedule-desc">
-                    📅 Planejar seu Cuidado
+                    <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    Planejar seu Cuidado
                 </button>
                 <span id="schedule-desc" class="sr-only">Agende uma nova consulta</span>
             </div>
@@ -122,12 +171,23 @@ function renderWelcomeScreen() {
 function renderIdentificationScreen() {
     return `
         <div class="screen" role="main" aria-labelledby="identification-title">
-            <h2 id="identification-title" class="animate-fade-in-stagger-1">🔐 Identificação</h2>
-            <p class="animate-fade-in-stagger-2">Por favor, insira seu CPF para continuar.</p>
-            <p class="subtitle animate-fade-in-stagger-2">Seus dados estão seguros conosco</p>
+            <h2 id="identification-title" class="animate-fade-in-stagger-1">
+                <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                </svg>
+                Identificação Segura
+            </h2>
+            <p class="animate-fade-in-stagger-2">Por favor, insira seu CPF para continuar com segurança.</p>
+            <p class="subtitle animate-fade-in-stagger-2">Seus dados estão protegidos conosco</p>
             
             <div class="demo-hint animate-fade-in-stagger-2">
-                <p>💡 <strong>Para testar a demonstração, use:</strong></p>
+                <p>
+                    <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9,12l2,2 4,-4"/>
+                    </svg>
+                    <strong>Para testar a demonstração, use:</strong>
+                </p>
                 <p class="demo-cpf">123.456.789-01</p>
             </div>
             
@@ -222,27 +282,66 @@ function renderCompletionScreen() {
     
     return `
         <div class="screen" role="main" aria-labelledby="completion-title">
-            <div class="completion-icon" role="img" aria-label="Check-in concluído com sucesso">
-                <svg viewBox="0 0 100 100">
-                    <circle class="circle" cx="50" cy="50" r="45"/>
-                    <path class="check" d="M30 50 l20 20 l30 -40"/>
+            <!-- Ilustração de sucesso com elementos de celebração suave -->
+            <div class="animate-fade-in-stagger-1">
+                <svg class="completion-illustration" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Processo concluído com sucesso">
+                    <defs>
+                        <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#80BBA2;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#5C5B7C;stop-opacity:0.8" />
+                        </linearGradient>
+                        <linearGradient id="celebrationGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#E9EFFF;stop-opacity:0.9" />
+                            <stop offset="100%" style="stop-color:#F8F4F2;stop-opacity:0.7" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- Formas orgânicas de celebração -->
+                    <ellipse cx="150" cy="125" rx="100" ry="60" fill="url(#celebrationGradient)" class="icon-breathe"/>
+                    <circle cx="80" cy="80" r="8" fill="#80BBA2" opacity="0.6" class="gentle-float"/>
+                    <circle cx="220" cy="70" r="6" fill="#80BBA2" opacity="0.4" class="gentle-float" style="animation-delay: 0.5s"/>
+                    <circle cx="70" cy="170" r="5" fill="#80BBA2" opacity="0.5" class="gentle-float" style="animation-delay: 1s"/>
+                    <circle cx="230" cy="180" r="7" fill="#80BBA2" opacity="0.6" class="gentle-float" style="animation-delay: 1.5s"/>
+                    
+                    <!-- Ícone principal de sucesso -->
+                    <circle cx="150" cy="125" r="35" fill="url(#successGradient)" class="icon-breathe"/>
+                    <g stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="130,125 145,140 170,110" class="draw-check"/>
+                    </g>
+                    
+                    <!-- Elementos decorativos -->
+                    <path d="M120 90 Q150 85 180 90" stroke="#80BBA2" stroke-width="2" fill="none" opacity="0.4"/>
+                    <path d="M120 160 Q150 165 180 160" stroke="#80BBA2" stroke-width="2" fill="none" opacity="0.4"/>
                 </svg>
             </div>
-            <h2 id="completion-title" class="animate-fade-in-stagger-1">
-                ✨ Tudo pronto, ${patientName}!
+            
+            <h2 id="completion-title" class="animate-fade-in-stagger-2">
+                <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Tudo pronto, ${patientName}!
             </h2>
-            <p class="animate-fade-in-stagger-2">
+            <p class="animate-fade-in-stagger-3">
                 ${isNewAppointment ? 'Sua consulta foi agendada com sucesso.' : 'Seu check-in foi realizado com sucesso.'}
             </p>
             <p class="subtitle animate-fade-in-stagger-3">
                 ${isNewAppointment ? 'Você receberá uma confirmação por SMS' : 'Dirija-se à sala de espera • Aguarde ser chamado'}
             </p>
-            <p class="animate-fade-in-stagger-3">
-                Desejamos uma experiência tranquila e acolhedora! 🌿
+            <p class="animate-fade-in-stagger-4">
+                <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+                Desejamos uma experiência tranquila e acolhedora!
             </p>
-            <div class="button-group animate-fade-in-stagger-4">
+            <div class="button-group animate-fade-in-stagger-5">
                 <button class="primary-button" id="finish-session" aria-describedby="finish-help">
-                    🏠 Finalizar Sessão
+                    <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    Finalizar Sessão
                 </button>
                 <span id="finish-help" class="sr-only">Retornar à tela inicial para outro atendimento</span>
             </div>
@@ -253,29 +352,62 @@ function renderCompletionScreen() {
 function renderReasonScreen() {
     return `
         <div class="screen">
-            <h2 class="animate-fade-in-stagger-1">🗓️ Novo Agendamento</h2>
+            <h2 class="animate-fade-in-stagger-1">
+                <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Novo Agendamento
+            </h2>
             <p class="animate-fade-in-stagger-2">Qual o motivo da sua consulta?</p>
             <p class="subtitle animate-fade-in-stagger-2">Selecione a especialidade desejada</p>
             <div class="reason-grid animate-fade-in-stagger-3">
                 <div class="reason-card" data-reason="Consulta de Rotina">
-                    <h3>🩺 Consulta de Rotina</h3>
+                    <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    <h3>Consulta de Rotina</h3>
                     <p>Acompanhamento periódico de saúde e bem-estar.</p>
                 </div>
                 <div class="reason-card" data-reason="Terapia">
-                    <h3>🧠 Terapia</h3>
+                    <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <path d="M9 12l2 2 4-4"/>
+                        <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+                        <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+                        <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
+                        <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
+                    </svg>
+                    <h3>Terapia</h3>
                     <p>Sessões de psicoterapia e apoio emocional.</p>
                 </div>
                 <div class="reason-card" data-reason="Acupuntura">
-                    <h3>🎯 Acupuntura</h3>
+                    <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="6"/>
+                        <circle cx="12" cy="12" r="2"/>
+                    </svg>
+                    <h3>Acupuntura</h3>
                     <p>Tratamento natural para alívio de dores.</p>
                 </div>
                  <div class="reason-card" data-reason="Nutrição">
-                    <h3>🥗 Nutrição</h3>
+                    <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="8" r="7"/>
+                        <polyline points="8.21,13.89 7,23 17,23 15.79,13.88"/>
+                    </svg>
+                    <h3>Nutrição</h3>
                     <p>Orientação nutricional personalizada.</p>
                 </div>
             </div>
              <div class="button-group animate-fade-in-stagger-4">
-                <button class="back-button" id="back-to-welcome">← Voltar</button>
+                <button class="back-button" id="back-to-welcome">
+                    <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <line x1="19" y1="12" x2="5" y2="12"/>
+                        <polyline points="12,19 5,12 12,5"/>
+                    </svg>
+                    Voltar
+                </button>
              </div>
         </div>
     `;
@@ -326,22 +458,52 @@ function renderProfileScreen() {
 function renderSpecialistsScreen() {
      return `
         <div class="screen">
-            <h2 class="animate-fade-in-stagger-1">👨‍⚕️ Nossos Especialistas</h2>
+            <h2 class="animate-fade-in-stagger-1">
+                <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                Nossos Especialistas
+            </h2>
             <p class="subtitle animate-fade-in-stagger-1">Profissionais qualificados para seu cuidado</p>
             <div class="specialists-list animate-fade-in-stagger-2">
                 <div class="specialist-item">
-                    <div class="specialist-name">Dr. Carlos Pereira</div>
-                    <div class="specialist-info">🧠 Psicólogo • Especialista em Terapia Cognitivo-Comportamental</div>
+                    <div class="specialist-name">
+                        <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                            <path d="M9 12l2 2 4-4"/>
+                            <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+                            <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+                            <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
+                            <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
+                        </svg>
+                        Dr. Carlos Pereira
+                    </div>
+                    <div class="specialist-info">Psicólogo • Especialista em Terapia Cognitivo-Comportamental</div>
                     <div class="specialist-info">CRP 12345 • 8 anos de experiência</div>
                 </div>
                 <div class="specialist-item">
-                    <div class="specialist-name">Dra. Ana Souza</div>
-                    <div class="specialist-info">🥗 Nutricionista • Foco em reeducação alimentar</div>
+                    <div class="specialist-name">
+                        <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                            <circle cx="12" cy="8" r="7"/>
+                            <polyline points="8.21,13.89 7,23 17,23 15.79,13.88"/>
+                        </svg>
+                        Dra. Ana Souza
+                    </div>
+                    <div class="specialist-info">Nutricionista • Foco in reeducação alimentar</div>
                     <div class="specialist-info">CRN 67890 • 6 anos de experiência</div>
                 </div>
                 <div class="specialist-item">
-                    <div class="specialist-name">Dr. Marcos Lima</div>
-                    <div class="specialist-info">🎯 Acupunturista • Especialista em dor crônica</div>
+                    <div class="specialist-name">
+                        <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="6"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
+                        Dr. Marcos Lima
+                    </div>
+                    <div class="specialist-info">Acupunturista • Especialista em dor crônica</div>
                     <div class="specialist-info">COFFITO 11223 • 10 anos de experiência</div>
                 </div>
             </div>
@@ -622,6 +784,27 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+// Função utilitária para criar divisores orgânicos
+function createOrganicDivider() {
+    return `
+        <div class="organic-divider">
+            <svg viewBox="0 0 400 40" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#5C5B7C;stop-opacity:0" />
+                        <stop offset="20%" style="stop-color:#80BBA2;stop-opacity:0.3" />
+                        <stop offset="50%" style="stop-color:#80BBA2;stop-opacity:0.6" />
+                        <stop offset="80%" style="stop-color:#80BBA2;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#5C5B7C;stop-opacity:0" />
+                    </linearGradient>
+                </defs>
+                <path d="M0 20 Q100 10 200 20 Q300 30 400 20" stroke="url(#dividerGradient)" stroke-width="2" fill="none"/>
+                <path d="M0 25 Q100 15 200 25 Q300 35 400 25" stroke="url(#dividerGradient)" stroke-width="1" fill="none" opacity="0.5"/>
+            </svg>
+        </div>
+    `;
+}
 
 // Inicia a aplicação
 render();

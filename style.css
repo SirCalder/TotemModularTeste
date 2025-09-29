@@ -499,6 +499,144 @@ input:focus-visible {
     transform: scale(1.05);
 }
 
+/* Ícones SVG - Feather Icons */
+.feather-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 12px;
+    color: currentColor;
+    transition: all 0.3s ease;
+    stroke: currentColor;
+    fill: none;
+}
+
+.feather-icon-small {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+.feather-icon-medium {
+    width: 28px;
+    height: 28px;
+    margin-right: 12px;
+}
+
+.feather-icon-large {
+    width: 48px;
+    height: 48px;
+    margin-right: 16px;
+    margin-bottom: 8px;
+}
+
+/* Ilustrações de destaque */
+.hero-illustration {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: 20px auto;
+    display: block;
+    opacity: 0.9;
+    filter: drop-shadow(0 10px 30px rgba(92, 91, 124, 0.1));
+}
+
+.completion-illustration {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    margin: 15px auto;
+    display: block;
+    opacity: 0.95;
+}
+
+/* Elementos decorativos sutis */
+.section-divider {
+    width: 100%;
+    height: 60px;
+    margin: 20px 0;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+/* Animações especiais para ícones */
+.icon-breathe {
+    animation: gentle-breathe 3s ease-in-out infinite;
+}
+
+@keyframes gentle-breathe {
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 0.8; 
+    }
+    50% { 
+        transform: scale(1.05); 
+        opacity: 1; 
+    }
+}
+
+@keyframes gentle-float {
+    0%, 100% { 
+        transform: translateY(0px); 
+        opacity: 0.6; 
+    }
+    50% { 
+        transform: translateY(-8px); 
+        opacity: 1; 
+    }
+}
+
+@keyframes draw-check {
+    0% { 
+        stroke-dasharray: 0 100; 
+    }
+    100% { 
+        stroke-dasharray: 100 0; 
+    }
+}
+
+/* Classe para animação de flutuação suave */
+.gentle-float {
+    animation: gentle-float 4s ease-in-out infinite;
+}
+
+/* Animação para o check de sucesso */
+.draw-check {
+    stroke-dasharray: 100;
+    animation: draw-check 1s ease-in-out 0.5s forwards;
+}
+
+/* Melhorias para feature cards */
+.feature-card .feather-icon {
+    color: var(--highlight-success);
+    margin: 0 auto 15px auto;
+    display: block;
+}
+
+.reason-card .feather-icon {
+    color: var(--highlight-success);
+    margin: 0 auto 10px auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.reason-card:hover .feather-icon {
+    transform: scale(1.1);
+}
+
+/* Divisor de seção decorativo */
+.organic-divider {
+    width: 100%;
+    height: 40px;
+    margin: 30px 0;
+    overflow: hidden;
+}
+
+.organic-divider svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+}
+
 /* Estilo para valores em destaque */
 .price-highlight {
     font-size: 1.5em;
