@@ -20,6 +20,8 @@ let state = {
     previousScreen: Screen.WELCOME,
     userData: null,
     newAppointment: {},
+    isLoading: false,
+    error: null,
 };
 
 // Mock de dados do usuário
@@ -93,19 +95,25 @@ function render() {
 
 function renderWelcomeScreen() {
     return `
-        <div class="screen">
+        <div class="screen" role="main" aria-labelledby="welcome-title">
             <div class="animate-fade-in-stagger-1">
-                <svg class="welcome-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="welcome-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6l4 2" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 22a10 10 0 110-20 10 10 0 010 20z" />
                 </svg>
             </div>
-            <h1 class="animate-fade-in-stagger-2">Bem-vindo(a)</h1>
+            <h1 id="welcome-title" class="animate-fade-in-stagger-2">Bem-vindo(a)</h1>
             <p class="animate-fade-in-stagger-3">Selecione uma opção para começar sua jornada.</p>
             <p class="subtitle animate-fade-in-stagger-3">Seu bem-estar é nossa prioridade</p>
-            <div class="button-group animate-fade-in-stagger-4">
-                <button class="primary-button" id="start-journey">✓ Realizar Check-in</button>
-                <button class="secondary-button" id="start-scheduling">📅 Planejar seu Cuidado</button>
+            <div class="button-group animate-fade-in-stagger-4" role="group" aria-label="Opções principais">
+                <button class="primary-button" id="start-journey" aria-describedby="checkin-desc">
+                    ✓ Realizar Check-in
+                </button>
+                <span id="checkin-desc" class="sr-only">Faça check-in para sua consulta já agendada</span>
+                <button class="secondary-button" id="start-scheduling" aria-describedby="schedule-desc">
+                    📅 Planejar seu Cuidado
+                </button>
+                <span id="schedule-desc" class="sr-only">Agende uma nova consulta</span>
             </div>
         </div>
     `;
@@ -113,38 +121,71 @@ function renderWelcomeScreen() {
 
 function renderIdentificationScreen() {
     return `
-        <div class="screen">
-            <h2 class="animate-fade-in-stagger-1">🔐 Identificação</h2>
+        <div class="screen" role="main" aria-labelledby="identification-title">
+            <h2 id="identification-title" class="animate-fade-in-stagger-1">🔐 Identificação</h2>
             <p class="animate-fade-in-stagger-2">Por favor, insira seu CPF para continuar.</p>
             <p class="subtitle animate-fade-in-stagger-2">Seus dados estão seguros conosco</p>
             <div class="input-container animate-fade-in-stagger-3">
-                <input type="text" id="cpf-input" class="input-field" placeholder="000.000.000-00" maxlength="14">
+                <label for="cpf-input" class="sr-only">Digite seu CPF</label>
+                <input 
+                    type="text" 
+                    id="cpf-input" 
+                    class="input-field" 
+                    placeholder="000.000.000-00" 
+                    maxlength="14"
+                    aria-describedby="cpf-help"
+                    aria-required="true"
+                    autocomplete="off"
+                    inputmode="numeric"
+                >
                 <div class="input-aura"></div>
+                <p id="cpf-help" class="sr-only">Digite os 11 dígitos do seu CPF. A formatação será aplicada automaticamente.</p>
             </div>
-            <div class="button-group animate-fade-in-stagger-4">
-                <button class="action-button" id="submit-id">✓ Confirmar</button>
-                <button class="back-button" id="back-to-welcome">← Voltar</button>
+            <div class="button-group animate-fade-in-stagger-4" role="group">
+                <button class="action-button" id="submit-id" aria-describedby="submit-help">
+                    ✓ Confirmar
+                </button>
+                <span id="submit-help" class="sr-only">Confirmar CPF e prosseguir para verificação</span>
+                <button class="back-button" id="back-to-welcome">
+                    ← Voltar
+                </button>
             </div>
         </div>
     `;
 }
 
 function renderConfirmationScreen() {
-    const { appointment, id } = state.userData;
+    const { appointment, id, name } = state.userData;
+    const isNewAppointment = id === 'Novo Agendamento';
+    const patientName = isNewAppointment ? 'Novo Paciente' : name;
+    
     return `
-        <div class="screen">
-            <h2 class="animate-fade-in-stagger-1">Confirme seus Dados</h2>
-            <div class="confirmation-details animate-fade-in-stagger-2">
-                <p><strong>Paciente:</strong> ${id === 'Novo Agendamento' ? 'Novo Paciente' : mockUserData.name}</p>
-                <p><strong>Tipo:</strong> ${appointment.type}</p>
-                <p><strong>Profissional:</strong> ${appointment.doctor}</p>
-                <p><strong>Horário:</strong> ${appointment.time}</p>
+        <div class="screen" role="main" aria-labelledby="confirmation-title">
+            <h2 id="confirmation-title" class="animate-fade-in-stagger-1">
+                ✨ ${isNewAppointment ? 'Confirme seu Agendamento' : `Olá, ${patientName.split(' ')[0]}!`}
+            </h2>
+            <p class="subtitle animate-fade-in-stagger-1">
+                ${isNewAppointment ? 'Revise os dados do seu novo agendamento' : 'Confirme os dados da sua consulta'}
+            </p>
+            <div class="confirmation-details animate-fade-in-stagger-2" role="region" aria-labelledby="appointment-details">
+                <h3 id="appointment-details" class="sr-only">Detalhes do agendamento</h3>
+                <p><strong>👤 Paciente:</strong> ${patientName}</p>
+                <p><strong>🩺 Tipo:</strong> ${appointment.type}</p>
+                <p><strong>👨‍⚕️ Profissional:</strong> ${appointment.doctor}</p>
+                <p><strong>🕐 Horário:</strong> ${appointment.time}</p>
+                ${!isNewAppointment ? `<p><strong>📍 Sala:</strong> ${Math.floor(Math.random() * 10) + 1}</p>` : ''}
             </div>
-            <div class="button-group animate-fade-in-stagger-3">
-                <button class="action-button" id="confirm-appointment">Confirmar e Pagar</button>
-                <button class="back-button" id="back-from-confirmation">Voltar</button>
+            <div class="button-group animate-fade-in-stagger-3" role="group">
+                <button class="action-button" id="confirm-appointment">
+                    💳 Confirmar e Pagar
+                </button>
+                <button class="back-button" id="back-from-confirmation">
+                    ← Voltar
+                </button>
             </div>
-             <button class="secondary-button animate-fade-in-stagger-4" id="view-profile">Ver Perfil do Profissional</button>
+             <button class="secondary-button animate-fade-in-stagger-4" id="view-profile">
+                 👨‍⚕️ Ver Perfil do Profissional
+             </button>
         </div>
     `;
 }
@@ -170,20 +211,34 @@ function renderPaymentScreen() {
 }
 
 function renderCompletionScreen() {
+    const patientName = state.userData?.name?.split(' ')[0] || 'paciente';
+    const isNewAppointment = state.userData?.id === 'Novo Agendamento';
+    
     return `
-        <div class="screen">
-            <div class="completion-icon">
+        <div class="screen" role="main" aria-labelledby="completion-title">
+            <div class="completion-icon" role="img" aria-label="Check-in concluído com sucesso">
                 <svg viewBox="0 0 100 100">
                     <circle class="circle" cx="50" cy="50" r="45"/>
                     <path class="check" d="M30 50 l20 20 l30 -40"/>
                 </svg>
             </div>
-            <h2 class="animate-fade-in-stagger-1">✨ Tudo Pronto!</h2>
-            <p class="animate-fade-in-stagger-2">Seu check-in foi realizado com sucesso.</p>
-            <p class="subtitle animate-fade-in-stagger-3">Dirija-se à sala de espera • Aguarde ser chamado</p>
-            <p class="animate-fade-in-stagger-3">Desejamos uma consulta tranquila e produtiva!</p>
+            <h2 id="completion-title" class="animate-fade-in-stagger-1">
+                ✨ Tudo pronto, ${patientName}!
+            </h2>
+            <p class="animate-fade-in-stagger-2">
+                ${isNewAppointment ? 'Sua consulta foi agendada com sucesso.' : 'Seu check-in foi realizado com sucesso.'}
+            </p>
+            <p class="subtitle animate-fade-in-stagger-3">
+                ${isNewAppointment ? 'Você receberá uma confirmação por SMS' : 'Dirija-se à sala de espera • Aguarde ser chamado'}
+            </p>
+            <p class="animate-fade-in-stagger-3">
+                Desejamos uma experiência tranquila e acolhedora! 🌿
+            </p>
             <div class="button-group animate-fade-in-stagger-4">
-                <button class="primary-button" id="finish-session">🏠 Finalizar Sessão</button>
+                <button class="primary-button" id="finish-session" aria-describedby="finish-help">
+                    🏠 Finalizar Sessão
+                </button>
+                <span id="finish-help" class="sr-only">Retornar à tela inicial para outro atendimento</span>
             </div>
         </div>
     `;
@@ -317,19 +372,41 @@ function addEventListeners() {
     document.getElementById('faq-button')?.addEventListener('click', () => changeScreen(Screen.FAQ));
 
     // Identification Screen
-    document.getElementById('submit-id')?.addEventListener('click', () => {
-        const id = document.getElementById('cpf-input').value;
-        if (id && id.length >= 11) {
-            state.userData = { ...mockUserData, id };
-            changeScreen(Screen.CONFIRMATION);
-        } else {
-            // Adiciona um pequeno shake se o CPF estiver incompleto
-            const input = document.getElementById('cpf-input');
+    document.getElementById('submit-id')?.addEventListener('click', async () => {
+        const input = document.getElementById('cpf-input');
+        const id = input.value;
+        const errorDiv = document.getElementById('cpf-error');
+        
+        // Limpa erros anteriores
+        if (errorDiv) errorDiv.remove();
+        
+        if (!isValidCPF(id)) {
+            showError(input, 'Por favor, insira um CPF válido');
             input.style.animation = 'none';
             input.offsetHeight; // Trigger reflow
             input.style.animation = 'shake 0.5s ease-in-out';
+            return;
         }
+        
+        // Simula busca no servidor
+        await simulateApiCall(async () => {
+            // Simula delay de API
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Simula 90% de sucesso
+            if (Math.random() > 0.1) {
+                state.userData = { 
+                    ...mockUserData, 
+                    id,
+                    name: getRandomPatientName() // Nome personalizado
+                };
+                changeScreen(Screen.CONFIRMATION);
+            } else {
+                throw new Error('CPF não encontrado em nossa base de dados');
+            }
+        }, 'Verificando seus dados...');
     });
+    
     document.getElementById('back-to-welcome')?.addEventListener('click', () => changeScreen(Screen.WELCOME));
     
     // Adiciona máscara para CPF
@@ -341,6 +418,13 @@ function addEventListeners() {
             value = value.replace(/(\d{3})(\d)/, '$1.$2');
             value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
             e.target.value = value;
+        });
+        
+        // Enter para submit
+        cpfInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('submit-id').click();
+            }
         });
     }
 
@@ -364,10 +448,23 @@ function addEventListeners() {
     });
     
     // Reason Screen
-    document.querySelectorAll('.reason-card').forEach(card => {
-        card.addEventListener('click', () => {
+    document.querySelectorAll('.reason-card').forEach((card, index) => {
+        // Torna os cards focusáveis
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-describedby', `reason-desc-${index}`);
+        
+        const handleSelect = () => {
             state.newAppointment.type = card.dataset.reason;
             changeScreen(Screen.SCHEDULING);
+        };
+        
+        card.addEventListener('click', handleSelect);
+        card.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleSelect();
+            }
         });
     });
 
@@ -397,6 +494,114 @@ function addEventListeners() {
     document.getElementById('back-from-faq')?.addEventListener('click', () => changeScreen(state.previousScreen));
 }
 
+
+// --- Funções Auxiliares ---
+
+function isValidCPF(cpf) {
+    cpf = cpf.replace(/\D/g, '');
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+        sum += parseInt(cpf[i]) * (10 - i);
+    }
+    let digit1 = (sum * 10) % 11;
+    if (digit1 === 10) digit1 = 0;
+    
+    sum = 0;
+    for (let i = 0; i < 10; i++) {
+        sum += parseInt(cpf[i]) * (11 - i);
+    }
+    let digit2 = (sum * 10) % 11;
+    if (digit2 === 10) digit2 = 0;
+    
+    return digit1 === parseInt(cpf[9]) && digit2 === parseInt(cpf[10]);
+}
+
+function getRandomPatientName() {
+    const names = [
+        'Maria Silva', 'João Santos', 'Ana Costa', 'Carlos Oliveira',
+        'Lucia Pereira', 'Pedro Souza', 'Carmen Lima', 'José Almeida',
+        'Rosa Ferreira', 'Antonio Ribeiro'
+    ];
+    return names[Math.floor(Math.random() * names.length)];
+}
+
+function showError(inputElement, message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'cpf-error';
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    errorDiv.setAttribute('role', 'alert');
+    errorDiv.setAttribute('aria-live', 'polite');
+    
+    inputElement.parentNode.insertBefore(errorDiv, inputElement.nextSibling);
+    
+    // Remove o erro após 5 segundos
+    setTimeout(() => {
+        if (errorDiv.parentNode) {
+            errorDiv.parentNode.removeChild(errorDiv);
+        }
+    }, 5000);
+}
+
+function showLoadingIndicator(message = 'Carregando...') {
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'loading-indicator';
+    loadingDiv.className = 'loading-spinner';
+    loadingDiv.innerHTML = `
+        <div class="spinner" aria-hidden="true"></div>
+        <p>${message}</p>
+    `;
+    loadingDiv.setAttribute('aria-live', 'polite');
+    
+    app.appendChild(loadingDiv);
+    return loadingDiv;
+}
+
+function hideLoadingIndicator() {
+    const loading = document.getElementById('loading-indicator');
+    if (loading) {
+        loading.remove();
+    }
+}
+
+async function simulateApiCall(apiFunction, loadingMessage) {
+    state.isLoading = true;
+    const loadingIndicator = showLoadingIndicator(loadingMessage);
+    
+    try {
+        await apiFunction();
+    } catch (error) {
+        console.error('API Error:', error);
+        // Exibe erro para o usuário
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message global-error';
+        errorDiv.textContent = error.message;
+        errorDiv.setAttribute('role', 'alert');
+        
+        app.insertBefore(errorDiv, app.firstChild);
+        
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.parentNode.removeChild(errorDiv);
+            }
+        }, 5000);
+    } finally {
+        state.isLoading = false;
+        hideLoadingIndicator();
+    }
+}
+
+// Adiciona navegação por teclado global
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        // ESC sempre volta para tela anterior
+        if (state.currentScreen !== Screen.WELCOME) {
+            changeScreen(state.previousScreen);
+        }
+    }
+});
 
 // Inicia a aplicação
 render();
