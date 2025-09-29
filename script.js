@@ -115,39 +115,37 @@ function render() {
     }
 }
 
-// Função para aplicar animações avançadas após renderização
+// Função para aplicar animações suaves após renderização
 function applyAdvancedAnimations() {
-    // Aguarda um frame para garantir que o DOM está pronto
+    // Aguarda um momento para garantir que o DOM está pronto
     requestAnimationFrame(() => {
-        // Animação de título com texto dividido
+        // Só aplica animações se GSAP estiver carregado
+        if (!organicAnimations.isGSAPLoaded) return;
+
+        // Animação sutil de título apenas na tela de boas-vindas
         const mainTitle = document.querySelector('h1');
         if (mainTitle && state.currentScreen === Screen.WELCOME) {
-            organicAnimations.revealText(mainTitle, 0.5);
+            organicAnimations.revealText(mainTitle, 0.2);
         }
 
-        // Animação de feedback interativo em botões
-        const buttons = document.querySelectorAll('.primary-button, .secondary-button');
-        buttons.forEach(button => {
-            button.classList.add('btn-with-icon');
+        // Feedback interativo apenas em botões principais
+        const primaryButtons = document.querySelectorAll('.primary-button, .secondary-button');
+        primaryButtons.forEach(button => {
             organicAnimations.interactiveFeedback(button);
         });
 
-        // Animação de entrada em cascata para cards
-        const cards = document.querySelectorAll('.reason-card, .feature-card, .specialist-item');
-        if (cards.length > 0) {
-            organicAnimations.cascadeIn(Array.from(cards), 0.3);
+        // Entrada suave para cards (sem cascata excessiva)
+        const cards = document.querySelectorAll('.reason-card, .feature-card');
+        if (cards.length > 0 && cards.length <= 4) {
+            organicAnimations.cascadeIn(Array.from(cards), 0.1);
         }
 
-        // Animação de respiração para ilustrações
-        const illustrations = document.querySelectorAll('.hero-illustration, .completion-illustration');
-        illustrations.forEach(illustration => {
-            organicAnimations.organicBreathe(illustration);
-        });
-
-        // Adiciona classes para efeitos especiais
-        const interactiveElements = document.querySelectorAll('.reason-card, .feature-card');
-        interactiveElements.forEach(element => {
-            element.classList.add('ripple-effect', 'interactive-feedback');
+        // Respiração muito sutil apenas para elementos centrais
+        const centralIllustrations = document.querySelectorAll('.hero-illustration svg circle');
+        centralIllustrations.forEach((element, index) => {
+            if (index === 0) { // Apenas o primeiro elemento
+                organicAnimations.organicBreathe(element);
+            }
         });
     });
 }
@@ -189,7 +187,7 @@ function renderWelcomeScreen() {
             </div>
             
             <h1 id="welcome-title" class="animate-fade-in-stagger-2" data-splitting>
-                <svg class="feather-icon feather-icon-medium organic-breathe" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
                     <circle cx="12" cy="12" r="5"/>
                     <line x1="12" y1="1" x2="12" y2="3"/>
                     <line x1="12" y1="21" x2="12" y2="23"/>
@@ -857,169 +855,170 @@ class OrganicAnimations {
         this.currentTimeline = null;
         
         if (this.isGSAPLoaded) {
-            // Configurações globais do GSAP
-            gsap.config({ nullTargetWarn: false });
-            gsap.defaults({ ease: "power2.out", duration: 0.8 });
+            // Configurações mais suaves para GSAP
+            gsap.config({ 
+                nullTargetWarn: false,
+                trialWarn: false 
+            });
+            gsap.defaults({ 
+                ease: "power1.out", 
+                duration: 0.6 
+            });
         }
     }
 
-    // Animação de transição de tela orgânica
+    // Animação de transição de tela simplificada e suave
     screenTransition(exitElement, enterElement, direction = 'right') {
         if (!this.isGSAPLoaded || !exitElement || !enterElement) {
-            // Fallback para CSS
             return this.fallbackTransition(exitElement, enterElement);
         }
 
         const tl = gsap.timeline();
 
-        // Saída suave da tela atual
+        // Saída simples e suave
         tl.to(exitElement, {
             opacity: 0,
-            x: direction === 'right' ? -100 : 100,
-            rotationY: direction === 'right' ? -15 : 15,
-            scale: 0.95,
-            duration: 0.6,
-            ease: "power2.in"
+            y: -20,
+            duration: 0.3,
+            ease: "power1.in"
         });
 
-        // Entrada elegante da nova tela
+        // Entrada suave e natural
         tl.fromTo(enterElement, 
             {
                 opacity: 0,
-                x: direction === 'right' ? 100 : -100,
-                rotationY: direction === 'right' ? 15 : -15,
-                scale: 1.05
+                y: 20
             },
             {
                 opacity: 1,
-                x: 0,
-                rotationY: 0,
-                scale: 1,
-                duration: 0.8,
-                ease: "back.out(1.2)"
+                y: 0,
+                duration: 0.4,
+                ease: "power1.out"
             }, 
-            "-=0.2"
+            "-=0.1"
         );
 
         return tl;
     }
 
-    // Animação de texto revelação caractere por caractere
+    // Animação de texto mais sutil e natural
     revealText(element, delay = 0) {
-        if (!this.isSplittingLoaded || !element) return;
+        if (!this.isSplittingLoaded || !element) {
+            // Fallback simples
+            if (this.isGSAPLoaded) {
+                gsap.fromTo(element, 
+                    { opacity: 0, y: 10 },
+                    { opacity: 1, y: 0, duration: 0.6, delay: delay }
+                );
+            }
+            return;
+        }
 
-        // Divide o texto em caracteres
-        const results = Splitting({ target: element, by: 'chars' });
+        // Divide o texto em palavras (mais suave que caracteres)
+        const results = Splitting({ target: element, by: 'words' });
         
         if (results && results[0]) {
-            const chars = results[0].chars;
+            const words = results[0].words;
             
             if (this.isGSAPLoaded) {
-                gsap.fromTo(chars, 
+                gsap.fromTo(words, 
                     {
                         opacity: 0,
-                        y: 20,
-                        rotationX: -90,
-                        transformOrigin: "center bottom"
+                        y: 15
                     },
                     {
                         opacity: 1,
                         y: 0,
-                        rotationX: 0,
-                        duration: 0.6,
-                        stagger: 0.03,
+                        duration: 0.4,
+                        stagger: 0.08,
                         delay: delay,
-                        ease: "back.out(1.7)"
+                        ease: "power1.out"
                     }
                 );
-            } else {
-                // Fallback CSS
-                element.classList.add('animate-text-reveal');
-                chars.forEach((char, i) => {
-                    setTimeout(() => {
-                        char.style.transitionDelay = `${i * 30}ms`;
-                        char.classList.add('revealed');
-                    }, delay * 1000);
-                });
             }
         }
     }
 
-    // Animação de feedback interativo para botões
+    // Feedback interativo mais sutil para botões
     interactiveFeedback(element) {
         if (!this.isGSAPLoaded || !element) return;
 
         const icon = element.querySelector('.feather-icon');
         
-        const tl = gsap.timeline({ paused: true });
-        
-        tl.to(element, {
-            y: -3,
-            scale: 1.02,
-            duration: 0.3,
-            ease: "power2.out"
-        });
-        
-        if (icon) {
-            tl.to(icon, {
-                rotation: 360,
-                scale: 1.2,
-                duration: 0.6,
-                ease: "back.out(1.7)"
-            }, 0);
-        }
-
-        // Eventos de hover
-        element.addEventListener('mouseenter', () => tl.play());
-        element.addEventListener('mouseleave', () => tl.reverse());
-        
-        // Evento de click com animação especial
-        element.addEventListener('click', () => {
+        // Hover simples e elegante
+        element.addEventListener('mouseenter', () => {
+            gsap.to(element, {
+                y: -2,
+                scale: 1.01,
+                duration: 0.2,
+                ease: "power1.out"
+            });
+            
             if (icon) {
                 gsap.to(icon, {
-                    rotation: "+=360",
-                    scale: 1.3,
-                    duration: 0.4,
-                    ease: "back.out(1.7)",
-                    yoyo: true,
-                    repeat: 1
+                    scale: 1.1,
+                    duration: 0.2,
+                    ease: "power1.out"
                 });
             }
         });
+
+        element.addEventListener('mouseleave', () => {
+            gsap.to(element, {
+                y: 0,
+                scale: 1,
+                duration: 0.2,
+                ease: "power1.out"
+            });
+            
+            if (icon) {
+                gsap.to(icon, {
+                    scale: 1,
+                    duration: 0.2,
+                    ease: "power1.out"
+                });
+            }
+        });
+        
+        // Click feedback muito sutil
+        element.addEventListener('click', () => {
+            gsap.to(element, {
+                scale: 0.98,
+                duration: 0.1,
+                yoyo: true,
+                repeat: 1,
+                ease: "power1.inOut"
+            });
+        });
     }
 
-    // Animação de entrada em cascata para elementos
+    // Animação de entrada em cascata mais suave
     cascadeIn(elements, startDelay = 0) {
         if (!this.isGSAPLoaded || !elements.length) return;
 
         gsap.fromTo(elements,
             {
                 opacity: 0,
-                y: 50,
-                scale: 0.9,
-                rotationX: -15
+                y: 20
             },
             {
                 opacity: 1,
                 y: 0,
-                scale: 1,
-                rotationX: 0,
-                duration: 0.8,
-                stagger: 0.15,
+                duration: 0.5,
+                stagger: 0.1,
                 delay: startDelay,
-                ease: "back.out(1.2)"
+                ease: "power1.out"
             }
         );
     }
 
-    // Animação de respiração orgânica
+    // Animação de respiração mais sutil
     organicBreathe(element) {
         if (!this.isGSAPLoaded || !element) return;
 
         gsap.to(element, {
-            scale: 1.05,
-            rotation: 2,
-            duration: 2,
+            scale: 1.02,
+            duration: 3,
             ease: "sine.inOut",
             yoyo: true,
             repeat: -1

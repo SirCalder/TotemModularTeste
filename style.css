@@ -641,19 +641,18 @@ input:focus-visible {
    ANIMAÇÕES AVANÇADAS - GSAP & SPLITTING
    ======================================== */
 
-/* Animações para texto dividido (Splitting.js) */
-.splitting .char {
+/* Animações para texto dividido - versão simplificada */
+.splitting .word {
     display: inline-block;
     opacity: 0;
-    transform: translateY(20px) rotateX(-90deg);
-    transform-origin: center bottom;
+    transform: translateY(10px);
     will-change: opacity, transform;
 }
 
-.animate-text-reveal .char {
+.animate-text-reveal .word {
     opacity: 1;
-    transform: translateY(0) rotateX(0);
-    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateY(0);
+    transition: all 0.4s ease-out;
 }
 
 /* Estados de transição de tela */
@@ -665,31 +664,19 @@ input:focus-visible {
     will-change: transform, opacity;
 }
 
-/* Animações de feedback interativo */
+/* Animações de feedback mais suaves */
 .interactive-feedback {
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.2s ease-out;
 }
 
 .interactive-feedback:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(92, 91, 124, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(92, 91, 124, 0.1);
 }
 
-.interactive-feedback:active {
-    transform: translateY(0) scale(0.98);
-}
-
-/* Botões com animação de ícone */
-.btn-with-icon .feather-icon {
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.btn-with-icon:hover .feather-icon {
-    transform: scale(1.2) rotate(10deg);
-}
-
-.btn-with-icon:active .feather-icon {
-    transform: scale(1.1) rotate(5deg);
+/* Transições suaves para ícones */
+.feather-icon {
+    transition: transform 0.2s ease-out;
 }
 
 /* Animação de entrada suave para elementos */
