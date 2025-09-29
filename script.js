@@ -125,6 +125,12 @@ function renderIdentificationScreen() {
             <h2 id="identification-title" class="animate-fade-in-stagger-1">🔐 Identificação</h2>
             <p class="animate-fade-in-stagger-2">Por favor, insira seu CPF para continuar.</p>
             <p class="subtitle animate-fade-in-stagger-2">Seus dados estão seguros conosco</p>
+            
+            <div class="demo-hint animate-fade-in-stagger-2">
+                <p>💡 <strong>Para testar a demonstração, use:</strong></p>
+                <p class="demo-cpf">123.456.789-01</p>
+            </div>
+            
             <div class="input-container animate-fade-in-stagger-3">
                 <label for="cpf-input" class="sr-only">Digite seu CPF</label>
                 <input 
@@ -499,6 +505,20 @@ function addEventListeners() {
 
 function isValidCPF(cpf) {
     cpf = cpf.replace(/\D/g, '');
+    
+    // CPFs de teste válidos para demonstração
+    const testCPFs = [
+        '12345678901', // CPF de teste simples
+        '11111111111', // Para facilitar testes
+        '00000000000', // Para demonstração
+        '12312312312'  // Outro CPF de teste
+    ];
+    
+    if (testCPFs.includes(cpf)) {
+        return true;
+    }
+    
+    // Validação real de CPF
     if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
     
     let sum = 0;

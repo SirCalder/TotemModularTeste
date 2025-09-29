@@ -462,6 +462,43 @@ input:focus-visible {
     outline-offset: 4px;
 }
 
+/* Dica de demonstração */
+.demo-hint {
+    background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+    border: 1px solid var(--highlight-success);
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(128, 187, 162, 0.2);
+}
+
+.demo-hint p {
+    margin: 5px 0;
+    font-size: 0.95em;
+    color: var(--text-main);
+}
+
+.demo-cpf {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+    color: var(--highlight-success) !important;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 8px 15px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 5px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.demo-cpf:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
+}
+
 /* Estilo para valores em destaque */
 .price-highlight {
     font-size: 1.5em;
