@@ -135,28 +135,54 @@ function render() {
             break;
     }
     
-    // Se há uma tela atual e GSAP está disponível, fazer transição animada
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = screenContent;
+    const newElement = tempDiv.firstElementChild;
+    
     if (currentElement && organicAnimations.isGSAPLoaded) {
-        // Cria elemento temporário para a nova tela
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = screenContent;
-        const newElement = tempDiv.firstElementChild;
+        // CRITICAL: Limpa TODAS as telas antigas antes de adicionar nova
+        const allScreens = app.querySelectorAll('.screen');
+        console.log(`[DEBUG] Telas encontradas antes da limpeza: ${allScreens.length}`);
         
-        // Adiciona a nova tela (invisível) ao DOM
+        allScreens.forEach(screen => {
+            if (screen !== currentElement) {
+                console.log('[DEBUG] Removendo tela fantasma');
+                screen.remove(); // Remove telas fantasma
+            }
+        });
+        
+        // Posiciona nova tela absolutamente durante transição
+        gsap.set(newElement, { 
+            position: 'absolute',
+            top: 0,
+            left: '50%',
+            xPercent: -50,
+            width: '100%',
+            maxWidth: '600px',
+            opacity: 0,
+            y: 30
+        });
+        
         app.appendChild(newElement);
         
         // Executa a transição
         organicAnimations.screenTransition(currentElement, newElement)
             .eventCallback("onComplete", () => {
-                // Remove a tela antiga após a animação
-                if (currentElement.parentNode) {
+                // Remove tela antiga
+                if (currentElement && currentElement.parentNode) {
                     currentElement.remove();
                 }
+                
+                // Reseta posicionamento da nova tela
+                gsap.set(newElement, { 
+                    clearProps: 'position,top,left,xPercent,width,maxWidth'
+                });
+                
                 addEventListeners();
                 applyAdvancedAnimations();
             });
     } else {
-        // Renderização simples (primeira vez ou fallback)
+        // Primeira renderização ou fallback - limpa tudo
         app.innerHTML = screenContent;
         addEventListeners();
         applyAdvancedAnimations();
@@ -165,36 +191,18 @@ function render() {
 
 // Função para aplicar animações suaves após renderização
 function applyAdvancedAnimations() {
-    // Aguarda um momento para garantir que o DOM está pronto
     requestAnimationFrame(() => {
-        // Só aplica animações se GSAP estiver carregado
         if (!organicAnimations.isGSAPLoaded) return;
 
-        // Animação sutil de título apenas na tela de boas-vindas
-        const mainTitle = document.querySelector('h1');
-        if (mainTitle && state.currentScreen === Screen.WELCOME) {
-            organicAnimations.revealText(mainTitle, 0.2);
+        // Animação de entrada para os elementos da tela
+        const elementsToAnimate = document.querySelectorAll('h1, h2, p, .button-group, .reason-grid, .specialists-selection, .calendar-container, .identification-form');
+        organicAnimations.cascadeIn(Array.from(elementsToAnimate), 0.1);
+
+        // Animação de respiração para a ilustração principal
+        const heroIllustration = document.querySelector('.hero-illustration');
+        if (heroIllustration) {
+            organicAnimations.organicBreathe(heroIllustration);
         }
-
-        // Feedback interativo apenas em botões principais
-        const primaryButtons = document.querySelectorAll('.primary-button, .secondary-button');
-        primaryButtons.forEach(button => {
-            organicAnimations.interactiveFeedback(button);
-        });
-
-        // Entrada suave para cards (sem cascata excessiva)
-        const cards = document.querySelectorAll('.reason-card, .feature-card');
-        if (cards.length > 0 && cards.length <= 4) {
-            organicAnimations.cascadeIn(Array.from(cards), 0.1);
-        }
-
-        // Respiração muito sutil apenas para elementos centrais
-        const centralIllustrations = document.querySelectorAll('.hero-illustration svg circle');
-        centralIllustrations.forEach((element, index) => {
-            if (index === 0) { // Apenas o primeiro elemento
-                organicAnimations.organicBreathe(element);
-            }
-        });
     });
 }
 
@@ -1156,327 +1164,97 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ========================================
-// SISTEMA DE ANIMAÇÕES AVANÇADAS - GSAP
+// SISTEMA DE ANIMAÇÕES REFINADO - GSAP
 // ========================================
 
 class OrganicAnimations {
     constructor() {
         this.isGSAPLoaded = typeof gsap !== 'undefined';
-        this.isSplittingLoaded = typeof Splitting !== 'undefined';
-        this.currentTimeline = null;
         
         if (this.isGSAPLoaded) {
-            // Configurações mais suaves para GSAP
-            gsap.config({ 
-                nullTargetWarn: false,
-                trialWarn: false 
-            });
             gsap.defaults({ 
-                ease: "power1.out", 
+                ease: "power2.out", 
                 duration: 0.6 
             });
         }
     }
 
-    // Animação de transição com dissolução de vidro (Glassmorphism)
-    screenTransition(exitElement, enterElement, direction = 'right') {
-        if (!this.isGSAPLoaded || !exitElement || !enterElement) {
-            return this.fallbackTransition(exitElement, enterElement);
-        }
+    /**
+     * Transição de tela suave e elegante, focada em fluidez.
+     * A tela antiga desliza para cima e desaparece, a nova desliza de baixo e aparece.
+     */
+    screenTransition(exitElement, enterElement) {
+        if (!this.isGSAPLoaded) return this.fallbackTransition(exitElement, enterElement);
 
         const tl = gsap.timeline();
 
-        // Saída: Dissolução do vidro - blur vai a zero como se dissolvesse
+        // Animação de saída - valores absolutos
         tl.to(exitElement, {
             opacity: 0,
-            y: -15,
-            scale: 0.98,
-            filter: 'blur(0px)',
-            duration: 0.5,
+            y: -30,
+            duration: 0.4,
             ease: "power2.in",
-            onStart: () => {
-                // Anima o backdrop-filter via CSS se possível
-                if (exitElement.style) {
-                    exitElement.style.transition = 'backdrop-filter 0.5s ease-in';
-                    exitElement.style.backdropFilter = 'blur(0px)';
+            onComplete: () => {
+                // Remove IMEDIATAMENTE ao terminar animação de saída
+                if (exitElement && exitElement.parentNode) {
+                    exitElement.remove();
                 }
             }
         });
 
-        // Entrada: Condensação do vidro - blur cresce de zero
+        // Animação de entrada - valores absolutos para evitar acúmulo
         tl.fromTo(enterElement, 
             {
                 opacity: 0,
-                y: 20,
-                scale: 1.02,
-                filter: 'blur(8px)'
+                y: 30
             },
             {
                 opacity: 1,
                 y: 0,
-                scale: 1,
-                filter: 'blur(0px)',
-                duration: 0.7,
+                duration: 0.5,
                 ease: "power2.out",
-                onStart: () => {
-                    if (enterElement.style) {
-                        enterElement.style.backdropFilter = 'blur(0px)';
-                    }
-                },
-                onUpdate: function() {
-                    // Anima backdrop-filter progressivamente
-                    const progress = this.progress();
-                    const blurValue = 12 * progress;
-                    if (enterElement.style) {
-                        enterElement.style.backdropFilter = `blur(${blurValue}px)`;
-                    }
-                }
+                clearProps: "transform" // Limpa transform ao finalizar
             }, 
-            "-=0.2"
+            "-=0.2" // Começa 0.2s antes da animação de saída terminar
         );
 
         return tl;
     }
 
-    // Animação de texto etérea - palavras condensam-se suavemente do ar
-    revealText(element, delay = 0) {
-        if (!this.isSplittingLoaded || !element) {
-            // Fallback com efeito de condensação
-            if (this.isGSAPLoaded) {
-                gsap.fromTo(element, 
-                    { 
-                        opacity: 0, 
-                        y: 12,
-                        filter: 'blur(4px)'
-                    },
-                    { 
-                        opacity: 1, 
-                        y: 0,
-                        filter: 'blur(0px)',
-                        duration: 0.8, 
-                        delay: delay,
-                        ease: "power2.out"
-                    }
-                );
-            }
-            return;
-        }
-
-        // Divide o texto em palavras para efeito de condensação progressiva
-        const results = Splitting({ target: element, by: 'words' });
-        
-        if (results && results[0]) {
-            const words = results[0].words;
-            
-            if (this.isGSAPLoaded) {
-                gsap.fromTo(words, 
-                    {
-                        opacity: 0,
-                        y: 18,
-                        filter: 'blur(6px)',
-                        scale: 0.95
-                    },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        filter: 'blur(0px)',
-                        scale: 1,
-                        duration: 0.7,
-                        stagger: {
-                            each: 0.06,
-                            ease: "power2.out"
-                        },
-                        delay: delay,
-                        ease: "power2.out"
-                    }
-                );
-            }
-        }
-    }
-
-    // Feedback interativo premium - tátil e suave como superfície macia
-    interactiveFeedback(element) {
-        if (!this.isGSAPLoaded || !element) return;
-
-        const icon = element.querySelector('.feather-icon');
-        
-        // Hover elegante com efeito de elevação suave
-        element.addEventListener('mouseenter', () => {
-            gsap.to(element, {
-                y: -3,
-                scale: 1.015,
-                duration: 0.4,
-                ease: "power2.out",
-                filter: 'brightness(1.05)'
-            });
-            
-            if (icon) {
-                gsap.to(icon, {
-                    scale: 1.12,
-                    rotation: 3,
-                    duration: 0.4,
-                    ease: "back.out(1.4)"
-                });
-            }
-        });
-
-        element.addEventListener('mouseleave', () => {
-            gsap.to(element, {
-                y: 0,
-                scale: 1,
-                duration: 0.5,
-                ease: "power2.out",
-                filter: 'brightness(1)'
-            });
-            
-            if (icon) {
-                gsap.to(icon, {
-                    scale: 1,
-                    rotation: 0,
-                    duration: 0.5,
-                    ease: "power2.out"
-                });
-            }
-        });
-        
-        // Click: Pressão tátil suave como superfície macia
-        element.addEventListener('click', (e) => {
-            // Efeito de pressão mais longo e suave
-            const tl = gsap.timeline();
-            
-            tl.to(element, {
-                scale: 0.97,
-                duration: 0.15,
-                ease: "power2.in"
-            })
-            .to(element, {
-                scale: 1.02,
-                duration: 0.25,
-                ease: "back.out(2)"
-            })
-            .to(element, {
-                scale: 1,
-                duration: 0.2,
-                ease: "power2.out"
-            });
-            
-            // Ripple effect sutil
-            if (icon) {
-                gsap.fromTo(icon, 
-                    { scale: 1 },
-                    {
-                        scale: 1.2,
-                        duration: 0.3,
-                        ease: "power2.out",
-                        yoyo: true,
-                        repeat: 1
-                    }
-                );
-            }
-        });
-    }
-
-    // Animação de entrada em cascata etérea com condensação
-    cascadeIn(elements, startDelay = 0) {
+    /**
+     * Animação de entrada em cascata para múltiplos elementos (como cards).
+     */
+    cascadeIn(elements, delay = 0) {
         if (!this.isGSAPLoaded || !elements.length) return;
 
-        gsap.fromTo(elements,
-            {
-                opacity: 0,
-                y: 25,
-                scale: 0.96,
-                filter: 'blur(5px)'
-            },
-            {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                filter: 'blur(0px)',
-                duration: 0.8,
-                stagger: {
-                    each: 0.12,
-                    ease: "power2.out"
-                },
-                delay: startDelay,
-                ease: "power2.out"
-            }
-        );
+        gsap.from(elements, {
+            opacity: 0,
+            y: 20,
+            duration: 0.5,
+            stagger: 0.1, // Atraso entre cada elemento
+            delay: delay,
+        });
     }
 
-    // Animação de respiração orgânica ultra suave
+    /**
+     * Animação de "respiração" orgânica para elementos de destaque.
+     */
     organicBreathe(element) {
         if (!this.isGSAPLoaded || !element) return;
 
-        // Respiração com múltiplas propriedades para efeito etéreo
         gsap.to(element, {
-            scale: 1.015,
-            opacity: 0.95,
-            duration: 4,
+            scale: 1.03,
+            duration: 4, // Ciclo longo e calmo
             ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1
-        });
-        
-        // Adiciona uma leve rotação para movimento orgânico
-        gsap.to(element, {
-            rotation: 2,
-            duration: 5,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1,
-            delay: 0.5
+            yoyo: true, // Vai e volta
+            repeat: -1 // Infinitamente
         });
     }
 
-    // Pulso de glow suave para elementos destacados
-    glowPulse(element, color = 'rgba(128, 187, 162, 0.4)') {
-        if (!this.isGSAPLoaded || !element) return;
-
-        gsap.to(element, {
-            boxShadow: `0 0 30px ${color}, 0 0 60px ${color}, inset 0 0 20px ${color}`,
-            duration: 2,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1
-        });
-    }
-
-    // Transição de blur animada para glassmorphism
-    animateGlassmorphism(element, fromBlur = 0, toBlur = 12, duration = 0.8) {
-        if (!this.isGSAPLoaded || !element) return;
-
-        const steps = 60;
-        const increment = (toBlur - fromBlur) / steps;
-        let currentStep = 0;
-
-        const animate = () => {
-            if (currentStep < steps) {
-                const blur = fromBlur + (increment * currentStep);
-                element.style.backdropFilter = `blur(${blur}px) saturate(180%)`;
-                element.style.webkitBackdropFilter = `blur(${blur}px) saturate(180%)`;
-                currentStep++;
-                requestAnimationFrame(animate);
-            }
-        };
-
-        animate();
-    }
-
-    // Fallback para quando GSAP não está disponível
+    // Fallback simples se o GSAP não carregar
     fallbackTransition(exitElement, enterElement) {
-        if (exitElement) {
-            exitElement.style.opacity = '0';
-            exitElement.style.transform = 'translateX(-20px)';
-            exitElement.style.transition = 'all 0.5s ease-in';
-        }
-        
-        if (enterElement) {
-            setTimeout(() => {
-                enterElement.style.opacity = '1';
-                enterElement.style.transform = 'translateX(0)';
-                enterElement.style.transition = 'all 0.7s ease-out';
-            }, 250);
-        }
+        if (exitElement) exitElement.style.display = 'none';
+        if (enterElement) enterElement.style.display = 'flex';
     }
 }
 

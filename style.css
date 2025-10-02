@@ -99,14 +99,16 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    height: 100vh; /* Altura fixa para estabilidade */
     line-height: 1.6;
-    overflow-x: hidden;
+    overflow: hidden; /* Bloqueia scroll em X e Y */
 }
 
 #app {
     width: 100%;
     max-width: var(--container-max-width);
     min-height: 100vh;
+    height: 100vh; /* Altura fixa para prevenir expansão */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -114,6 +116,7 @@ body {
     padding: var(--container-padding);
     position: relative;
     transition: opacity 0.4s ease-in-out;
+    overflow: hidden; /* Previne scroll durante transições */
 }
 
 #app.fading {
@@ -131,13 +134,15 @@ body {
     gap: var(--spacing-unit);
     width: 100%;
     max-width: 600px;
+    max-height: 100%; /* Limita altura ao container pai */
     box-sizing: border-box;
     margin: 0 auto;
+    overflow-y: auto; /* Permite scroll interno se conteúdo exceder */
     
     /* Otimização para animações suaves */
-    will-change: transform, opacity, filter;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
+    transform: translate3d(0, 0, 0); /* Force GPU acceleration sem will-change persistente */
 }
 
 /* Responsividade da tela */
@@ -256,9 +261,7 @@ p {
     gap: 8px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    
-    /* Suporta animações de backdrop-filter */
-    will-change: transform, opacity, filter;
+    backface-visibility: hidden;
 }
 
 /* Responsividade dos botões */
@@ -874,30 +877,14 @@ input:focus-visible {
 }
 
 /* ========================================
-   ANIMAÇÕES AVANÇADAS - GSAP & SPLITTING
+   ANIMAÇÕES AVANÇADAS - GSAP
    ======================================== */
 
-/* Animações para texto dividido - versão simplificada */
-.splitting .word {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(10px);
-    will-change: opacity, transform;
-}
-
-.animate-text-reveal .word {
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.4s ease-out;
-}
-
-/* Estados de transição de tela */
-.screen-exit {
-    will-change: transform, opacity;
-}
-
+/* Estados de transição de tela - otimizado */
+.screen-exit,
 .screen-enter {
-    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
 }
 
 /* Animações de feedback mais suaves */
@@ -1006,36 +993,15 @@ input:focus-visible {
     100% { transform: translateY(-50%) rotate(360deg); }
 }
 
-/* Melhorias específicas para a experiência "Calma Orgânica" */
-.screen {
-    transform-origin: center center;
-    backface-visibility: hidden;
-    will-change: transform, opacity;
-}
-
-/* Efeito de profundidade para as telas */
-.screen::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(ellipse at center, transparent 0%, rgba(92, 91, 124, 0.02) 100%);
-    pointer-events: none;
-    z-index: -1;
-}
-
 /* Melhoria nos títulos principais */
 h1, h2 {
     text-shadow: 0 2px 10px rgba(92, 91, 124, 0.1);
     letter-spacing: -0.02em;
 }
 
-/* Transições mais suaves para todos os elementos interativos */
-button, .reason-card, .feature-card, .specialist-item {
+/* Transições mais suaves para elementos interativos - apenas durante hover */
+button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
     will-change: transform;
-    backface-visibility: hidden;
 }
 
 /* Efeito de glassmorphism sutil */
