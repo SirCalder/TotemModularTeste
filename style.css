@@ -133,6 +133,11 @@ body {
     max-width: 600px;
     box-sizing: border-box;
     margin: 0 auto;
+    
+    /* Otimização para animações suaves */
+    will-change: transform, opacity, filter;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Responsividade da tela */
@@ -189,20 +194,20 @@ h1, h2 {
     color: var(--text-main);
     font-weight: 600;
     margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 h1 {
     font-size: var(--font-size-h1);
     font-weight: 400;
     text-shadow: 0 2px 4px rgba(92, 91, 124, 0.1);
-    letter-spacing: -0.02em;
     line-height: 1.2;
 }
 
 h2 {
     font-size: var(--font-size-h2);
     text-shadow: 0 1px 3px rgba(92, 91, 124, 0.08);
-    letter-spacing: -0.01em;
     line-height: 1.3;
 }
 
@@ -214,6 +219,8 @@ p {
     color: var(--text-secondary);
     font-weight: 300;
     text-shadow: 0 1px 2px rgba(92, 91, 124, 0.05);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
 .subtitle {
@@ -225,7 +232,7 @@ p {
 }
 
 /* Novos Botões */
-/* Botões responsivos */
+/* Botões responsivos com Glassmorphism */
 .primary-button, .secondary-button, .action-button, .back-button {
     width: 100%;
     max-width: 350px;
@@ -235,13 +242,23 @@ p {
     font-size: 1.1em;
     font-weight: 400;
     cursor: pointer;
-    transition: all 0.3s ease;
+    
+    /* Transição suave para todas as propriedades incluindo filter */
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1), 
+                filter 0.3s ease,
+                box-shadow 0.4s ease;
+    
     margin: 8px 0;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    
+    /* Suporta animações de backdrop-filter */
+    will-change: transform, opacity, filter;
 }
 
 /* Responsividade dos botões */
@@ -326,11 +343,39 @@ p {
     margin-top: 20px;
 }
 
-/* Campo de CPF */
+/* Formulário de Identificação */
+.identification-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.input-label {
+    display: block;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.input-hint {
+    font-size: 0.75em;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    text-align: left;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+/* Campos de input */
 .input-container {
     position: relative;
     width: 100%;
-    max-width: 400px;
 }
 
 @keyframes breathing-input {
@@ -346,18 +391,36 @@ p {
 
 .input-field {
     width: 100%;
-    padding: 20px;
+    padding: 16px 20px;
     margin: 0;
-    border: 1px solid var(--border-color);
-    border-radius: 15px;
-    font-size: 1.5em;
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.6);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1.1em;
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.8);
     color: var(--text-main);
-    letter-spacing: 0.2em;
+    letter-spacing: 0.02em;
     transition: all 0.3s ease;
-    animation: breathing-input 3s ease-in-out infinite;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+}
+
+.identification-form .input-field {
+    font-size: 1em;
+}
+
+.input-field::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+    letter-spacing: 0.05em;
+}
+
+#cpf-input {
+    text-align: center;
+    letter-spacing: 0.2em;
+    font-size: 1.3em;
+    animation: breathing-input 3s ease-in-out infinite;
 }
 
 .input-field:focus {
@@ -1109,19 +1172,32 @@ button, .reason-card, .feature-card, .specialist-item {
     font-size: 1em;
 }
 
-/* Outros */
+/* Outros - Painéis de Informação com Glassmorphism Premium */
 .confirmation-details, .profile-details, .specialists-list {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
+    /* Glassmorphism elegante */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.72) 0%,
+        rgba(255, 255, 255, 0.52) 100%
+    );
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    
     padding: 30px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 22px;
+    
+    /* Borda de vidro refinada */
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        0 2px 8px rgba(0, 0, 0, 0.03);
+    
     margin-bottom: 20px;
     text-align: left;
     width: 100%;
     max-width: 500px;
     box-sizing: border-box;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
     position: relative;
     overflow: hidden;
 }
@@ -1174,14 +1250,30 @@ button, .reason-card, .feature-card, .specialist-item {
 }
 
 .reason-card, .feature-card {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(8px);
+    /* Glassmorphism Premium - Efeito de Vidro Fosco */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0.5) 100%
+    );
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    
+    /* Estrutura */
     padding: calc(var(--spacing-unit) * 1.5) var(--spacing-unit);
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    
+    /* Borda de vidro sutil - Placa de vidro */
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    
+    /* Sombras múltiplas para profundidade */
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        0 1px 3px rgba(0, 0, 0, 0.02);
+    
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     overflow: hidden;
     text-align: center;
@@ -1218,15 +1310,36 @@ button, .reason-card, .feature-card, .specialist-item {
 }
 
 .reason-card:hover {
-    background-color: rgba(255, 255, 255, 0.95);
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
-    border-color: var(--text-main);
+    /* Intensifica o efeito de vidro - Foco do Vidro */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.85) 0%,
+        rgba(255, 255, 255, 0.65) 100%
+    );
+    backdrop-filter: blur(16px) saturate(200%);
+    -webkit-backdrop-filter: blur(16px) saturate(200%);
+    
+    /* Movimento suave e elegante */
+    transform: translateY(-8px) scale(1.015);
+    
+    /* Glow sutil e sombras profundas */
+    box-shadow: 
+        0 16px 48px rgba(0, 0, 0, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 0 24px rgba(128, 187, 162, 0.15);
+    
+    /* Borda mais visível */
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .reason-card:active {
-    transform: translateY(-8px) scale(1.01);
-    transition: transform 0.1s ease;
+    /* Pressão suave e táctil */
+    transform: translateY(-4px) scale(1.005);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+    
+    backdrop-filter: blur(14px) saturate(190%);
+    -webkit-backdrop-filter: blur(14px) saturate(190%);
 }
 
 .reason-card h3 { 
@@ -1247,4 +1360,496 @@ button, .reason-card, .feature-card, .specialist-item {
 
 .reason-card:hover p {
     color: var(--text-main);
+}
+
+.reason-price {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--highlight-success) !important;
+    margin-top: 8px;
+}
+
+.reason-card:hover .reason-price {
+    color: var(--highlight-success) !important;
+}
+
+/* ========================================
+   SISTEMA DE AGENDAMENTO COM CALENDÁRIO
+   ======================================== */
+
+/* Seleção de Especialistas */
+.specialists-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.specialist-card {
+    /* Glassmorphism Premium */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.75) 0%,
+        rgba(255, 255, 255, 0.55) 100%
+    );
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    
+    /* Borda de vidro */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    text-align: center;
+}
+
+.specialist-card:hover {
+    /* Intensifica vidro no hover */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.88) 0%,
+        rgba(255, 255, 255, 0.68) 100%
+    );
+    backdrop-filter: blur(18px) saturate(200%);
+    -webkit-backdrop-filter: blur(18px) saturate(200%);
+    
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(128, 187, 162, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        0 0 32px rgba(128, 187, 162, 0.12);
+    
+    border-color: rgba(128, 187, 162, 0.3);
+}
+
+.specialist-card.selected {
+    /* Estado selecionado com glow */
+    background: linear-gradient(
+        135deg,
+        rgba(128, 187, 162, 0.2) 0%,
+        rgba(128, 187, 162, 0.1) 100%
+    );
+    backdrop-filter: blur(16px) saturate(200%);
+    -webkit-backdrop-filter: blur(16px) saturate(200%);
+    
+    border-color: rgba(128, 187, 162, 0.4);
+    box-shadow: 
+        0 8px 32px rgba(128, 187, 162, 0.25),
+        inset 0 0 24px rgba(128, 187, 162, 0.1),
+        0 0 48px rgba(128, 187, 162, 0.2);
+}
+
+.specialist-photo {
+    font-size: 4em;
+    line-height: 1;
+}
+
+.specialist-info h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: var(--text-main);
+}
+
+.specialist-specialty {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.specialist-gender {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+}
+
+.specialist-price {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--highlight-success);
+    margin-top: 8px;
+}
+
+/* Calendário */
+.calendar-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 24px;
+    
+    /* Glassmorphism Container */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.65) 0%,
+        rgba(255, 255, 255, 0.45) 100%
+    );
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.calendar-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.calendar-header h3 {
+    margin: 0 0 10px 0;
+    color: var(--text-main);
+}
+
+.selected-specialist-name {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 5px 0;
+}
+
+.selected-specialist-price {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--highlight-success);
+    margin: 5px 0;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.calendar-day {
+    padding: 16px 8px;
+    border-radius: 14px;
+    text-align: center;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+}
+
+.calendar-day.available {
+    /* Glassmorphism para dias */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.85) 0%,
+        rgba(255, 255, 255, 0.65) 100%
+    );
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.calendar-day.available:hover {
+    /* Intensifica vidro */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.75) 100%
+    );
+    backdrop-filter: blur(14px) saturate(200%);
+    -webkit-backdrop-filter: blur(14px) saturate(200%);
+    
+    transform: translateY(-3px) scale(1.03);
+    border-color: rgba(128, 187, 162, 0.4);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 0 16px rgba(128, 187, 162, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.calendar-day.available.selected {
+    /* Estado selecionado com glow verde */
+    background: linear-gradient(
+        135deg,
+        rgba(128, 187, 162, 0.3) 0%,
+        rgba(128, 187, 162, 0.15) 100%
+    );
+    backdrop-filter: blur(12px) saturate(200%);
+    -webkit-backdrop-filter: blur(12px) saturate(200%);
+    
+    border-color: rgba(128, 187, 162, 0.5);
+    box-shadow: 
+        0 6px 24px rgba(128, 187, 162, 0.3),
+        inset 0 0 20px rgba(128, 187, 162, 0.1),
+        0 0 40px rgba(128, 187, 162, 0.2);
+}
+
+.calendar-day.unavailable {
+    /* Vidro opaco para indisponível */
+    background: linear-gradient(
+        135deg,
+        rgba(200, 200, 200, 0.4) 0%,
+        rgba(200, 200, 200, 0.2) 100%
+    );
+    backdrop-filter: blur(6px) saturate(100%);
+    -webkit-backdrop-filter: blur(6px) saturate(100%);
+    
+    border: 1px solid rgba(200, 200, 200, 0.3);
+    color: var(--text-secondary);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.day-name {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.day-date {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* Slots de Horário */
+.time-slots-container {
+    margin-top: 20px;
+}
+
+.time-slots-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.time-slots-header h3 {
+    margin: 0;
+    color: var(--text-main);
+}
+
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.time-slot {
+    padding: 16px;
+    
+    /* Glassmorphism para horários */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.88) 0%,
+        rgba(255, 255, 255, 0.68) 100%
+    );
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    
+    border-radius: 14px;
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    color: var(--text-main);
+}
+
+.time-slot:hover {
+    /* Vidro intenso */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.78) 100%
+    );
+    backdrop-filter: blur(16px) saturate(200%);
+    -webkit-backdrop-filter: blur(16px) saturate(200%);
+    
+    transform: translateY(-3px) scale(1.05);
+    border-color: rgba(128, 187, 162, 0.4);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.08),
+        0 0 20px rgba(128, 187, 162, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.time-slot.selected {
+    /* Selecionado com glow */
+    background: linear-gradient(
+        135deg,
+        rgba(128, 187, 162, 0.35) 0%,
+        rgba(128, 187, 162, 0.2) 100%
+    );
+    backdrop-filter: blur(14px) saturate(200%);
+    -webkit-backdrop-filter: blur(14px) saturate(200%);
+    
+    border-color: rgba(128, 187, 162, 0.5);
+    box-shadow: 
+        0 6px 24px rgba(128, 187, 162, 0.3),
+        inset 0 0 24px rgba(128, 187, 162, 0.15),
+        0 0 48px rgba(128, 187, 162, 0.2);
+}
+
+/* Grade de Especialistas Detalhados */
+.specialists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+}
+
+.specialist-detail-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.specialist-detail-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.specialist-photo-large {
+    font-size: 5em;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.specialist-details {
+    text-align: center;
+    width: 100%;
+}
+
+.specialist-details h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.3em;
+    color: var(--text-main);
+}
+
+.specialist-description {
+    font-size: 0.9em;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 12px 0;
+}
+
+.specialist-price-large {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: var(--highlight-success);
+    margin: 12px 0;
+}
+
+.specialist-availability {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    margin: 8px 0;
+}
+
+.price-highlight {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--highlight-success);
+    margin: 12px 0;
+}
+
+/* ========================================
+   KEYFRAMES PARA EFEITOS GLASSMORPHISM
+   ======================================== */
+
+/* Dissolução de vidro - Saída de tela */
+@keyframes glass-dissolve {
+    0% {
+        opacity: 1;
+        backdrop-filter: blur(12px) saturate(180%);
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        backdrop-filter: blur(0px) saturate(100%);
+        transform: scale(0.98);
+    }
+}
+
+/* Condensação de vidro - Entrada de tela */
+@keyframes glass-condense {
+    0% {
+        opacity: 0;
+        backdrop-filter: blur(0px) saturate(100%);
+        filter: blur(8px);
+        transform: scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        backdrop-filter: blur(12px) saturate(180%);
+        filter: blur(0px);
+        transform: scale(1);
+    }
+}
+
+/* Glow pulsante suave */
+@keyframes soft-glow-pulse {
+    0%, 100% {
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        box-shadow: 
+            0 8px 32px rgba(128, 187, 162, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.6),
+            0 0 40px rgba(128, 187, 162, 0.12);
+    }
+}
+
+/* Respiração etérea de vidro */
+@keyframes ethereal-breathe {
+    0%, 100% {
+        backdrop-filter: blur(12px) saturate(180%);
+        opacity: 1;
+    }
+    50% {
+        backdrop-filter: blur(14px) saturate(190%);
+        opacity: 0.98;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .specialists-selection,
+    .specialists-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .calendar-days {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+    
+    .time-slots {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
 }

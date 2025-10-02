@@ -35,6 +35,54 @@ const mockUserData = {
     },
 };
 
+// Dados dos profissionais
+const specialists = [
+    {
+        id: 1,
+        name: 'Dra. Helena Costa',
+        gender: 'Feminino',
+        specialty: 'Psicologia Clínica',
+        description: 'Especialista em terapia cognitivo-comportamental e atendimento de ansiedade',
+        photo: '👩‍⚕️',
+        price: 180.00,
+        availableDays: [1, 2, 3, 4, 5], // Segunda a Sexta
+        availableHours: ['08:00', '09:00', '10:00', '14:00', '15:00', '16:00']
+    },
+    {
+        id: 2,
+        name: 'Dr. Carlos Mendes',
+        gender: 'Masculino',
+        specialty: 'Psicologia',
+        description: 'Atendimento a adultos e adolescentes, especialista em desenvolvimento pessoal',
+        photo: '👨‍⚕️',
+        price: 180.00,
+        availableDays: [0, 2, 4], // Domingo, Terça, Quinta
+        availableHours: ['09:00', '10:00', '11:00', '14:00', '15:00']
+    },
+    {
+        id: 3,
+        name: 'Dra. Ana Souza',
+        gender: 'Feminino',
+        specialty: 'Nutrição',
+        description: 'Nutricionista especializada em reeducação alimentar e nutrição esportiva',
+        photo: '👩‍⚕️',
+        price: 150.00,
+        availableDays: [1, 3, 5], // Segunda, Quarta, Sexta
+        availableHours: ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00']
+    },
+    {
+        id: 4,
+        name: 'Dr. Roberto Silva',
+        gender: 'Masculino',
+        specialty: 'Acupuntura',
+        description: 'Acupunturista com 15 anos de experiência em medicina tradicional chinesa',
+        photo: '👨‍⚕️',
+        price: 120.00,
+        availableDays: [2, 3, 4], // Terça, Quarta, Quinta
+        availableHours: ['08:00', '10:00', '14:00', '16:00', '17:00']
+    }
+];
+
 // --- Funções de Navegação e Renderização ---
 
 function changeScreen(newScreen) {
@@ -232,12 +280,13 @@ function renderIdentificationScreen() {
         <div class="screen" role="main" aria-labelledby="identification-title">
             <h2 id="identification-title" class="animate-fade-in-stagger-1">
                 <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
-                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
                 </svg>
-                Identificação Segura
+                Bem-vindo! Vamos começar
             </h2>
-            <p class="animate-fade-in-stagger-2">Por favor, insira seu CPF para continuar com segurança.</p>
-            <p class="subtitle animate-fade-in-stagger-2">Seus dados estão protegidos conosco</p>
+            <p class="animate-fade-in-stagger-2">Para cuidar melhor de você, precisamos te conhecer</p>
+            <p class="subtitle animate-fade-in-stagger-2">Suas informações estão seguras conosco</p>
             
             <div class="demo-hint animate-fade-in-stagger-2">
                 <p>
@@ -245,34 +294,64 @@ function renderIdentificationScreen() {
                         <circle cx="12" cy="12" r="10"/>
                         <path d="M9,12l2,2 4,-4"/>
                     </svg>
-                    <strong>Para testar a demonstração, use:</strong>
+                    <strong>Para demonstração, use nome "João Silva" e data 01/01/1990</strong>
                 </p>
-                <p class="demo-cpf">123.456.789-01</p>
             </div>
             
-            <div class="input-container animate-fade-in-stagger-3">
-                <label for="cpf-input" class="sr-only">Digite seu CPF</label>
-                <input 
-                    type="text" 
-                    id="cpf-input" 
-                    class="input-field" 
-                    placeholder="000.000.000-00" 
-                    maxlength="14"
-                    aria-describedby="cpf-help"
-                    aria-required="true"
-                    autocomplete="off"
-                    inputmode="numeric"
-                >
-                <div class="input-aura"></div>
-                <p id="cpf-help" class="sr-only">Digite os 11 dígitos do seu CPF. A formatação será aplicada automaticamente.</p>
+            <div class="identification-form animate-fade-in-stagger-3">
+                <div class="input-container">
+                    <label for="name-input" class="input-label">SEU NOME COMPLETO</label>
+                    <input 
+                        type="text" 
+                        id="name-input" 
+                        class="input-field" 
+                        placeholder="DIGITE SEU NOME" 
+                        aria-required="true"
+                        autocomplete="name"
+                    >
+                    <div class="input-aura"></div>
+                </div>
+                
+                <div class="input-container">
+                    <label for="birth-date-input" class="input-label">DATA DE NASCIMENTO</label>
+                    <input 
+                        type="text" 
+                        id="birth-date-input" 
+                        class="input-field" 
+                        placeholder="DD/MM/AAAA"
+                        maxlength="10"
+                        aria-required="true"
+                        autocomplete="bday"
+                        inputmode="numeric"
+                    >
+                    <div class="input-aura"></div>
+                </div>
+                
+                <div class="input-container">
+                    <label for="cpf-input" class="input-label">CPF (PARA VALIDAÇÃO)</label>
+                    <input 
+                        type="text" 
+                        id="cpf-input" 
+                        class="input-field" 
+                        placeholder="000.000.000-00" 
+                        maxlength="14"
+                        aria-describedby="cpf-help"
+                        aria-required="true"
+                        autocomplete="off"
+                        inputmode="numeric"
+                    >
+                    <div class="input-aura"></div>
+                    <p id="cpf-help" class="input-hint">USAMOS SEU CPF APENAS PARA CONFIRMAR SUA IDENTIDADE</p>
+                </div>
             </div>
+            
             <div class="button-group animate-fade-in-stagger-4" role="group">
                 <button class="action-button" id="submit-id" aria-describedby="submit-help">
-                    ✓ Confirmar
+                    ✓ CONTINUAR
                 </button>
-                <span id="submit-help" class="sr-only">Confirmar CPF e prosseguir para verificação</span>
+                <span id="submit-help" class="sr-only">Confirmar dados e prosseguir</span>
                 <button class="back-button" id="back-to-welcome">
-                    ← Voltar
+                    ← VOLTAR
                 </button>
             </div>
         </div>
@@ -282,34 +361,37 @@ function renderIdentificationScreen() {
 function renderConfirmationScreen() {
     const { appointment, id, name } = state.userData;
     const isNewAppointment = id === 'Novo Agendamento';
-    const patientName = isNewAppointment ? 'Novo Paciente' : name;
+    const patientName = isNewAppointment ? (name || 'NOVO PACIENTE') : name;
+    const appointmentPrice = appointment.price || 150.00;
     
     return `
         <div class="screen" role="main" aria-labelledby="confirmation-title">
             <h2 id="confirmation-title" class="animate-fade-in-stagger-1">
-                ✨ ${isNewAppointment ? 'Confirme seu Agendamento' : `Olá, ${patientName.split(' ')[0]}!`}
+                ✨ ${isNewAppointment ? 'CONFIRME SEU AGENDAMENTO' : `OLÁ, ${patientName.split(' ')[0].toUpperCase()}!`}
             </h2>
             <p class="subtitle animate-fade-in-stagger-1">
-                ${isNewAppointment ? 'Revise os dados do seu novo agendamento' : 'Confirme os dados da sua consulta'}
+                ${isNewAppointment ? 'REVISE OS DADOS DO SEU NOVO AGENDAMENTO' : 'CONFIRME OS DADOS DA SUA CONSULTA'}
             </p>
             <div class="confirmation-details animate-fade-in-stagger-2" role="region" aria-labelledby="appointment-details">
-                <h3 id="appointment-details" class="sr-only">Detalhes do agendamento</h3>
-                <p><strong>👤 Paciente:</strong> ${patientName}</p>
-                <p><strong>🩺 Tipo:</strong> ${appointment.type}</p>
-                <p><strong>👨‍⚕️ Profissional:</strong> ${appointment.doctor}</p>
-                <p><strong>🕐 Horário:</strong> ${appointment.time}</p>
-                ${!isNewAppointment ? `<p><strong>📍 Sala:</strong> ${Math.floor(Math.random() * 10) + 1}</p>` : ''}
+                <h3 id="appointment-details" class="sr-only">DETALHES DO AGENDAMENTO</h3>
+                <p><strong>👤 PACIENTE:</strong> ${patientName.toUpperCase()}</p>
+                <p><strong>🩺 TIPO:</strong> ${appointment.type.toUpperCase()}</p>
+                <p><strong>👨‍⚕️ PROFISSIONAL:</strong> ${appointment.doctor.toUpperCase()}</p>
+                ${appointment.date ? `<p><strong>📅 DATA:</strong> ${appointment.date.toUpperCase()}</p>` : ''}
+                <p><strong>🕐 HORÁRIO:</strong> ${appointment.time}</p>
+                ${!isNewAppointment ? `<p><strong>📍 SALA:</strong> ${Math.floor(Math.random() * 10) + 1}</p>` : ''}
+                <p class="price-highlight"><strong>💰 VALOR:</strong> R$ ${appointmentPrice.toFixed(2)}</p>
             </div>
             <div class="button-group animate-fade-in-stagger-3" role="group">
                 <button class="action-button" id="confirm-appointment">
-                    💳 Confirmar e Pagar
+                    💳 CONFIRMAR E PAGAR
                 </button>
                 <button class="back-button" id="back-from-confirmation">
-                    ← Voltar
+                    ← VOLTAR
                 </button>
             </div>
              <button class="secondary-button animate-fade-in-stagger-4" id="view-profile">
-                 👨‍⚕️ Ver Perfil do Profissional
+                 👨‍⚕️ VER PERFIL DO PROFISSIONAL
              </button>
         </div>
     `;
@@ -427,8 +509,9 @@ function renderReasonScreen() {
                     <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                     </svg>
-                    <h3>Consulta de Rotina</h3>
-                    <p>Acompanhamento periódico de saúde e bem-estar.</p>
+                    <h3>CONSULTA DE ROTINA</h3>
+                    <p>ACOMPANHAMENTO PERIÓDICO DE SAÚDE E BEM-ESTAR.</p>
+                    <p class="reason-price">A PARTIR DE R$ 150,00</p>
                 </div>
                 <div class="reason-card" data-reason="Terapia">
                     <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
@@ -438,8 +521,9 @@ function renderReasonScreen() {
                         <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
                         <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
                     </svg>
-                    <h3>Terapia</h3>
-                    <p>Sessões de psicoterapia e apoio emocional.</p>
+                    <h3>TERAPIA</h3>
+                    <p>SESSÕES DE PSICOTERAPIA E APOIO EMOCIONAL.</p>
+                    <p class="reason-price">A PARTIR DE R$ 180,00</p>
                 </div>
                 <div class="reason-card" data-reason="Acupuntura">
                     <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
@@ -447,16 +531,18 @@ function renderReasonScreen() {
                         <circle cx="12" cy="12" r="6"/>
                         <circle cx="12" cy="12" r="2"/>
                     </svg>
-                    <h3>Acupuntura</h3>
-                    <p>Tratamento natural para alívio de dores.</p>
+                    <h3>ACUPUNTURA</h3>
+                    <p>TRATAMENTO NATURAL PARA ALÍVIO DE DORES.</p>
+                    <p class="reason-price">A PARTIR DE R$ 120,00</p>
                 </div>
                  <div class="reason-card" data-reason="Nutrição">
                     <svg class="feather-icon feather-icon-medium" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
                         <circle cx="12" cy="8" r="7"/>
                         <polyline points="8.21,13.89 7,23 17,23 15.79,13.88"/>
                     </svg>
-                    <h3>Nutrição</h3>
-                    <p>Orientação nutricional personalizada.</p>
+                    <h3>NUTRIÇÃO</h3>
+                    <p>ORIENTAÇÃO NUTRICIONAL PERSONALIZADA.</p>
+                    <p class="reason-price">A PARTIR DE R$ 150,00</p>
                 </div>
             </div>
              <div class="button-group animate-fade-in-stagger-4">
@@ -473,26 +559,40 @@ function renderReasonScreen() {
 }
 
 function renderSchedulingScreen() {
-     return `
+    const selectedSpecialty = state.newAppointment.type || 'Psicologia';
+    const filteredSpecialists = specialists.filter(s => 
+        s.specialty.toLowerCase().includes(selectedSpecialty.toLowerCase())
+    );
+    
+    const availableSpecialists = filteredSpecialists.length > 0 ? filteredSpecialists : specialists;
+    
+    return `
         <div class="screen">
-            <h2 class="animate-fade-in-stagger-1">Escolha o Horário</h2>
-            <p class="animate-fade-in-stagger-2">Selecione o profissional e o horário desejado.</p>
-            <div class="confirmation-details animate-fade-in-stagger-3">
-                 <label for="doctor-select">Profissional:</label>
-                 <select id="doctor-select" class="input-field">
-                    <option value="Dr. Carlos Pereira">Dr. Carlos Pereira (Psicólogo)</option>
-                    <option value="Dra. Ana Souza">Dra. Ana Souza (Nutricionista)</option>
-                 </select>
-                 <label for="date-input">Data:</label>
-                 <input type="date" id="date-input" class="input-field">
-                 <label for="time-input">Hora:</label>
-                 <input type="time" id="time-input" class="input-field">
+            <h2 class="animate-fade-in-stagger-1">ESCOLHA SEU PROFISSIONAL</h2>
+            <p class="animate-fade-in-stagger-2">SELECIONE O PROFISSIONAL E VEJA OS HORÁRIOS DISPONÍVEIS</p>
+            
+            <div class="specialists-selection animate-fade-in-stagger-3">
+                ${availableSpecialists.map(specialist => `
+                    <div class="specialist-card" data-specialist-id="${specialist.id}" tabindex="0" role="button">
+                        <div class="specialist-photo">${specialist.photo}</div>
+                        <div class="specialist-info">
+                            <h3>${specialist.name}</h3>
+                            <p class="specialist-specialty">${specialist.specialty}</p>
+                            <p class="specialist-gender">GÊNERO: ${specialist.gender.toUpperCase()}</p>
+                            <p class="specialist-price">R$ ${specialist.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                `).join('')}
             </div>
+            
+            <div id="calendar-container" class="calendar-container" style="display: none;">
+                <!-- O calendário será inserido aqui dinamicamente -->
+            </div>
+            
             <div class="button-group animate-fade-in-stagger-4">
-                <button class="action-button" id="schedule-confirm">Agendar</button>
-                <button class="back-button" id="back-to-reason">Voltar</button>
+                <button class="back-button" id="back-to-reason">← VOLTAR</button>
             </div>
-            <button class="secondary-button animate-fade-in-stagger-5" id="view-specialists">Ver Especialistas</button>
+            <button class="secondary-button animate-fade-in-stagger-5" id="view-specialists">VER TODOS OS ESPECIALISTAS</button>
         </div>
     `;
 }
@@ -524,50 +624,34 @@ function renderSpecialistsScreen() {
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
-                Nossos Especialistas
+                NOSSOS ESPECIALISTAS
             </h2>
-            <p class="subtitle animate-fade-in-stagger-1">Profissionais qualificados para seu cuidado</p>
-            <div class="specialists-list animate-fade-in-stagger-2">
-                <div class="specialist-item">
-                    <div class="specialist-name">
-                        <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
-                            <path d="M9 12l2 2 4-4"/>
-                            <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
-                            <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
-                            <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
-                            <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
-                        </svg>
-                        Dr. Carlos Pereira
+            <p class="subtitle animate-fade-in-stagger-1">PROFISSIONAIS QUALIFICADOS PARA SEU CUIDADO</p>
+            <div class="specialists-grid animate-fade-in-stagger-2">
+                ${specialists.map(specialist => `
+                    <div class="specialist-detail-card">
+                        <div class="specialist-photo-large">${specialist.photo}</div>
+                        <div class="specialist-details">
+                            <h3>${specialist.name.toUpperCase()}</h3>
+                            <p class="specialist-specialty">${specialist.specialty.toUpperCase()}</p>
+                            <p class="specialist-gender">
+                                <strong>GÊNERO:</strong> ${specialist.gender.toUpperCase()}
+                            </p>
+                            <p class="specialist-description">${specialist.description.toUpperCase()}</p>
+                            <p class="specialist-price-large">
+                                <strong>VALOR DA CONSULTA:</strong><br>
+                                R$ ${specialist.price.toFixed(2)}
+                            </p>
+                            <p class="specialist-availability">
+                                <strong>DIAS DISPONÍVEIS:</strong><br>
+                                ${getDayNames(specialist.availableDays).join(', ').toUpperCase()}
+                            </p>
+                        </div>
                     </div>
-                    <div class="specialist-info">Psicólogo • Especialista em Terapia Cognitivo-Comportamental</div>
-                    <div class="specialist-info">CRP 12345 • 8 anos de experiência</div>
-                </div>
-                <div class="specialist-item">
-                    <div class="specialist-name">
-                        <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
-                            <circle cx="12" cy="8" r="7"/>
-                            <polyline points="8.21,13.89 7,23 17,23 15.79,13.88"/>
-                        </svg>
-                        Dra. Ana Souza
-                    </div>
-                    <div class="specialist-info">Nutricionista • Foco in reeducação alimentar</div>
-                    <div class="specialist-info">CRN 67890 • 6 anos de experiência</div>
-                </div>
-                <div class="specialist-item">
-                    <div class="specialist-name">
-                        <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
-                            <circle cx="12" cy="12" r="10"/>
-                            <circle cx="12" cy="12" r="6"/>
-                            <circle cx="12" cy="12" r="2"/>
-                        </svg>
-                        Dr. Marcos Lima
-                    </div>
-                    <div class="specialist-info">Acupunturista • Especialista em dor crônica</div>
-                    <div class="specialist-info">COFFITO 11223 • 10 anos de experiência</div>
-                </div>
+                `).join('')}
             </div>
             <div class="button-group animate-fade-in-stagger-3">
-                <button class="back-button" id="back-from-specialists">← Voltar</button>
+                <button class="back-button" id="back-from-specialists">← VOLTAR</button>
             </div>
         </div>
     `;
@@ -600,18 +684,35 @@ function addEventListeners() {
 
     // Identification Screen
     document.getElementById('submit-id')?.addEventListener('click', async () => {
-        const input = document.getElementById('cpf-input');
-        const id = input.value;
-        const errorDiv = document.getElementById('cpf-error');
+        const nameInput = document.getElementById('name-input');
+        const birthDateInput = document.getElementById('birth-date-input');
+        const cpfInput = document.getElementById('cpf-input');
+        
+        const name = nameInput?.value.trim();
+        const birthDate = birthDateInput?.value;
+        const cpf = cpfInput?.value;
         
         // Limpa erros anteriores
-        if (errorDiv) errorDiv.remove();
+        document.querySelectorAll('.error-message').forEach(el => el.remove());
         
-        if (!isValidCPF(id)) {
-            showError(input, 'Por favor, insira um CPF válido');
-            input.style.animation = 'none';
-            input.offsetHeight; // Trigger reflow
-            input.style.animation = 'shake 0.5s ease-in-out';
+        // Validação de campos
+        if (!name || name.length < 3) {
+            showError(nameInput, 'POR FAVOR, DIGITE SEU NOME COMPLETO');
+            nameInput.focus();
+            return;
+        }
+        
+        if (!isValidBirthDate(birthDate)) {
+            showError(birthDateInput, 'DATA INVÁLIDA. USE O FORMATO DD/MM/AAAA');
+            birthDateInput.style.animation = 'shake 0.5s ease-in-out';
+            birthDateInput.focus();
+            return;
+        }
+        
+        if (!isValidCPF(cpf)) {
+            showError(cpfInput, 'POR FAVOR, INSIRA UM CPF VÁLIDO');
+            cpfInput.style.animation = 'shake 0.5s ease-in-out';
+            cpfInput.focus();
             return;
         }
         
@@ -624,19 +725,41 @@ function addEventListeners() {
             if (Math.random() > 0.1) {
                 state.userData = { 
                     ...mockUserData, 
-                    id,
-                    name: getRandomPatientName() // Nome personalizado
+                    id: cpf,
+                    name: name, // Usa o nome inserido
+                    birthDate: birthDate
                 };
                 changeScreen(Screen.CONFIRMATION);
             } else {
-                throw new Error('CPF não encontrado em nossa base de dados');
+                throw new Error('NÃO CONSEGUIMOS VALIDAR SEUS DADOS. TENTE NOVAMENTE.');
             }
-        }, 'Verificando seus dados...');
+        }, 'VERIFICANDO SEUS DADOS...');
     });
     
     document.getElementById('back-to-welcome')?.addEventListener('click', () => changeScreen(Screen.WELCOME));
     
-    // Adiciona máscara para CPF
+    // Adiciona máscaras para os campos
+    const nameInput = document.getElementById('name-input');
+    if (nameInput) {
+        nameInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    }
+    
+    const birthDateInput = document.getElementById('birth-date-input');
+    if (birthDateInput) {
+        birthDateInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            if (value.length >= 5) {
+                value = value.substring(0, 5) + '/' + value.substring(5, 9);
+            }
+            e.target.value = value;
+        });
+    }
+    
     const cpfInput = document.getElementById('cpf-input');
     if (cpfInput) {
         cpfInput.addEventListener('input', (e) => {
@@ -647,11 +770,13 @@ function addEventListeners() {
             e.target.value = value;
         });
         
-        // Enter para submit
-        cpfInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                document.getElementById('submit-id').click();
-            }
+        // Enter para submit em qualquer campo
+        [nameInput, birthDateInput, cpfInput].forEach(input => {
+            input?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('submit-id')?.click();
+                }
+            });
         });
     }
 
@@ -695,23 +820,34 @@ function addEventListeners() {
         });
     });
 
-    // Scheduling Screen
-    document.getElementById('schedule-confirm')?.addEventListener('click', () => {
-        const doctor = document.getElementById('doctor-select').value;
-        const date = document.getElementById('date-input').value;
-        const time = document.getElementById('time-input').value;
-        if (doctor && date && time) {
-            state.userData = {
-                id: 'Novo Agendamento',
-                appointment: {
-                    doctor,
-                    time,
-                    type: state.newAppointment.type || 'Não definido',
-                },
-            };
-            changeScreen(Screen.CONFIRMATION);
-        }
+    // Scheduling Screen - Seleção de especialistas
+    document.querySelectorAll('.specialist-card').forEach(card => {
+        const handleSpecialistSelect = () => {
+            const specialistId = parseInt(card.dataset.specialistId);
+            state.newAppointment.specialistId = specialistId;
+            
+            // Remove seleção anterior
+            document.querySelectorAll('.specialist-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            
+            // Mostra o calendário
+            const calendarContainer = document.getElementById('calendar-container');
+            calendarContainer.innerHTML = generateCalendar(specialistId);
+            calendarContainer.style.display = 'block';
+            
+            // Adiciona listeners para os dias do calendário
+            setTimeout(() => addCalendarListeners(specialistId), 100);
+        };
+        
+        card.addEventListener('click', handleSpecialistSelect);
+        card.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleSpecialistSelect();
+            }
+        });
     });
+    
     document.getElementById('back-to-reason')?.addEventListener('click', () => changeScreen(Screen.REASON));
     document.getElementById('view-specialists')?.addEventListener('click', () => changeScreen(Screen.SPECIALISTS));
 
@@ -719,6 +855,82 @@ function addEventListeners() {
     document.getElementById('back-from-profile')?.addEventListener('click', () => changeScreen(state.previousScreen));
     document.getElementById('back-from-specialists')?.addEventListener('click', () => changeScreen(state.previousScreen));
     document.getElementById('back-from-faq')?.addEventListener('click', () => changeScreen(state.previousScreen));
+}
+
+function addCalendarListeners(specialistId) {
+    // Listeners para os dias do calendário
+    document.querySelectorAll('.calendar-day.available').forEach(dayElement => {
+        const handleDaySelect = () => {
+            const selectedDate = dayElement.dataset.date;
+            state.newAppointment.date = selectedDate;
+            
+            // Remove seleção anterior
+            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+            dayElement.classList.add('selected');
+            
+            // Mostra os horários disponíveis
+            const timeSlotsContainer = document.getElementById('time-slots-container');
+            timeSlotsContainer.innerHTML = generateTimeSlots(specialistId, selectedDate);
+            timeSlotsContainer.style.display = 'block';
+            
+            // Adiciona listeners para os horários
+            setTimeout(() => addTimeSlotListeners(specialistId), 100);
+        };
+        
+        dayElement.addEventListener('click', handleDaySelect);
+        dayElement.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleDaySelect();
+            }
+        });
+    });
+}
+
+function addTimeSlotListeners(specialistId) {
+    // Listeners para os slots de horário
+    document.querySelectorAll('.time-slot').forEach(slot => {
+        const handleTimeSelect = () => {
+            const selectedTime = slot.dataset.time;
+            state.newAppointment.time = selectedTime;
+            
+            // Remove seleção anterior
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            slot.classList.add('selected');
+        };
+        
+        slot.addEventListener('click', handleTimeSelect);
+        slot.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleTimeSelect();
+            }
+        });
+    });
+    
+    // Listener para o botão de confirmação
+    document.getElementById('confirm-schedule-button')?.addEventListener('click', () => {
+        if (!state.newAppointment.date || !state.newAppointment.time) {
+            alert('POR FAVOR, SELECIONE UMA DATA E HORÁRIO');
+            return;
+        }
+        
+        const specialist = specialists.find(s => s.id === specialistId);
+        const date = new Date(state.newAppointment.date);
+        
+        state.userData = {
+            id: 'Novo Agendamento',
+            name: state.userData?.name || 'Novo Paciente',
+            appointment: {
+                doctor: specialist.name,
+                time: state.newAppointment.time,
+                date: date.toLocaleDateString('pt-BR'),
+                type: state.newAppointment.type || 'Consulta',
+                price: specialist.price
+            },
+        };
+        changeScreen(Screen.CONFIRMATION);
+    });
 }
 
 
@@ -766,6 +978,105 @@ function getRandomPatientName() {
         'Rosa Ferreira', 'Antonio Ribeiro'
     ];
     return names[Math.floor(Math.random() * names.length)];
+}
+
+function isValidBirthDate(dateStr) {
+    if (!dateStr || dateStr.length !== 10) return false;
+    
+    const parts = dateStr.split('/');
+    if (parts.length !== 3) return false;
+    
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+    
+    // Validação básica
+    if (day < 1 || day > 31) return false;
+    if (month < 1 || month > 12) return false;
+    if (year < 1900 || year > new Date().getFullYear()) return false;
+    
+    // Cria data e valida
+    const date = new Date(year, month - 1, day);
+    if (date.getDate() !== day || date.getMonth() !== month - 1 || date.getFullYear() !== year) {
+        return false;
+    }
+    
+    // Verifica se não é futura
+    if (date > new Date()) return false;
+    
+    return true;
+}
+
+function getDayNames(dayNumbers) {
+    const days = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
+    return dayNumbers.map(num => days[num]);
+}
+
+function generateCalendar(specialistId) {
+    const specialist = specialists.find(s => s.id === specialistId);
+    if (!specialist) return '';
+    
+    const today = new Date();
+    const calendar = [];
+    
+    // Gera os próximos 14 dias
+    for (let i = 0; i < 14; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        
+        const dayOfWeek = date.getDay();
+        const isAvailable = specialist.availableDays.includes(dayOfWeek);
+        
+        calendar.push({
+            date: date,
+            dayOfWeek: dayOfWeek,
+            isAvailable: isAvailable,
+            dateString: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+            dayName: getDayNames([dayOfWeek])[0].substring(0, 3)
+        });
+    }
+    
+    return `
+        <div class="calendar-header">
+            <h3>ESCOLHA O DIA DA CONSULTA</h3>
+            <p class="selected-specialist-name">${specialist.name.toUpperCase()}</p>
+            <p class="selected-specialist-price">VALOR: R$ ${specialist.price.toFixed(2)}</p>
+        </div>
+        <div class="calendar-days">
+            ${calendar.map(day => `
+                <div class="calendar-day ${day.isAvailable ? 'available' : 'unavailable'}" 
+                     data-date="${day.date.toISOString()}"
+                     ${day.isAvailable ? 'tabindex="0" role="button"' : ''}>
+                    <div class="day-name">${day.dayName}</div>
+                    <div class="day-date">${day.dateString}</div>
+                </div>
+            `).join('')}
+        </div>
+        <div id="time-slots-container" class="time-slots-container" style="display: none;">
+            <!-- Os horários serão inseridos aqui -->
+        </div>
+    `;
+}
+
+function generateTimeSlots(specialistId, selectedDate) {
+    const specialist = specialists.find(s => s.id === specialistId);
+    if (!specialist) return '';
+    
+    return `
+        <div class="time-slots-header">
+            <h3>ESCOLHA O HORÁRIO</h3>
+        </div>
+        <div class="time-slots">
+            ${specialist.availableHours.map(hour => `
+                <div class="time-slot" data-time="${hour}" tabindex="0" role="button">
+                    ${hour}
+                </div>
+            `).join('')}
+        </div>
+        <button class="action-button" id="confirm-schedule-button" style="margin-top: 20px;">
+            ✓ CONFIRMAR AGENDAMENTO
+        </button>
+    `;
 }
 
 function showError(inputElement, message) {
@@ -867,7 +1178,7 @@ class OrganicAnimations {
         }
     }
 
-    // Animação de transição de tela simplificada e suave
+    // Animação de transição com dissolução de vidro (Glassmorphism)
     screenTransition(exitElement, enterElement, direction = 'right') {
         if (!this.isGSAPLoaded || !exitElement || !enterElement) {
             return this.fallbackTransition(exitElement, enterElement);
@@ -875,46 +1186,83 @@ class OrganicAnimations {
 
         const tl = gsap.timeline();
 
-        // Saída simples e suave
+        // Saída: Dissolução do vidro - blur vai a zero como se dissolvesse
         tl.to(exitElement, {
             opacity: 0,
-            y: -20,
-            duration: 0.3,
-            ease: "power1.in"
+            y: -15,
+            scale: 0.98,
+            filter: 'blur(0px)',
+            duration: 0.5,
+            ease: "power2.in",
+            onStart: () => {
+                // Anima o backdrop-filter via CSS se possível
+                if (exitElement.style) {
+                    exitElement.style.transition = 'backdrop-filter 0.5s ease-in';
+                    exitElement.style.backdropFilter = 'blur(0px)';
+                }
+            }
         });
 
-        // Entrada suave e natural
+        // Entrada: Condensação do vidro - blur cresce de zero
         tl.fromTo(enterElement, 
             {
                 opacity: 0,
-                y: 20
+                y: 20,
+                scale: 1.02,
+                filter: 'blur(8px)'
             },
             {
                 opacity: 1,
                 y: 0,
-                duration: 0.4,
-                ease: "power1.out"
+                scale: 1,
+                filter: 'blur(0px)',
+                duration: 0.7,
+                ease: "power2.out",
+                onStart: () => {
+                    if (enterElement.style) {
+                        enterElement.style.backdropFilter = 'blur(0px)';
+                    }
+                },
+                onUpdate: function() {
+                    // Anima backdrop-filter progressivamente
+                    const progress = this.progress();
+                    const blurValue = 12 * progress;
+                    if (enterElement.style) {
+                        enterElement.style.backdropFilter = `blur(${blurValue}px)`;
+                    }
+                }
             }, 
-            "-=0.1"
+            "-=0.2"
         );
 
         return tl;
     }
 
-    // Animação de texto mais sutil e natural
+    // Animação de texto etérea - palavras condensam-se suavemente do ar
     revealText(element, delay = 0) {
         if (!this.isSplittingLoaded || !element) {
-            // Fallback simples
+            // Fallback com efeito de condensação
             if (this.isGSAPLoaded) {
                 gsap.fromTo(element, 
-                    { opacity: 0, y: 10 },
-                    { opacity: 1, y: 0, duration: 0.6, delay: delay }
+                    { 
+                        opacity: 0, 
+                        y: 12,
+                        filter: 'blur(4px)'
+                    },
+                    { 
+                        opacity: 1, 
+                        y: 0,
+                        filter: 'blur(0px)',
+                        duration: 0.8, 
+                        delay: delay,
+                        ease: "power2.out"
+                    }
                 );
             }
             return;
         }
 
-        // Divide o texto em palavras (mais suave que caracteres)
+        // Divide o texto em palavras para efeito de condensação progressiva
         const results = Splitting({ target: element, by: 'words' });
         
         if (results && results[0]) {
@@ -924,41 +1272,50 @@ class OrganicAnimations {
                 gsap.fromTo(words, 
                     {
                         opacity: 0,
-                        y: 15
+                        y: 18,
+                        filter: 'blur(6px)',
+                        scale: 0.95
                     },
                     {
                         opacity: 1,
                         y: 0,
-                        duration: 0.4,
-                        stagger: 0.08,
+                        filter: 'blur(0px)',
+                        scale: 1,
+                        duration: 0.7,
+                        stagger: {
+                            each: 0.06,
+                            ease: "power2.out"
+                        },
                         delay: delay,
-                        ease: "power1.out"
+                        ease: "power2.out"
                     }
                 );
             }
         }
     }
 
-    // Feedback interativo mais sutil para botões
+    // Feedback interativo premium - tátil e suave como superfície macia
     interactiveFeedback(element) {
         if (!this.isGSAPLoaded || !element) return;
 
         const icon = element.querySelector('.feather-icon');
         
-        // Hover simples e elegante
+        // Hover elegante com efeito de elevação suave
         element.addEventListener('mouseenter', () => {
             gsap.to(element, {
-                y: -2,
-                scale: 1.01,
-                duration: 0.2,
-                ease: "power1.out"
+                y: -3,
+                scale: 1.015,
+                duration: 0.4,
+                ease: "power2.out",
+                filter: 'brightness(1.05)'
             });
             
             if (icon) {
                 gsap.to(icon, {
-                    scale: 1.1,
-                    duration: 0.2,
-                    ease: "power1.out"
+                    scale: 1.12,
+                    rotation: 3,
+                    duration: 0.4,
+                    ease: "back.out(1.4)"
                 });
             }
         });
@@ -967,62 +1324,142 @@ class OrganicAnimations {
             gsap.to(element, {
                 y: 0,
                 scale: 1,
-                duration: 0.2,
-                ease: "power1.out"
+                duration: 0.5,
+                ease: "power2.out",
+                filter: 'brightness(1)'
             });
             
             if (icon) {
                 gsap.to(icon, {
                     scale: 1,
-                    duration: 0.2,
-                    ease: "power1.out"
+                    rotation: 0,
+                    duration: 0.5,
+                    ease: "power2.out"
                 });
             }
         });
         
-        // Click feedback muito sutil
-        element.addEventListener('click', () => {
-            gsap.to(element, {
-                scale: 0.98,
-                duration: 0.1,
-                yoyo: true,
-                repeat: 1,
-                ease: "power1.inOut"
+        // Click: Pressão tátil suave como superfície macia
+        element.addEventListener('click', (e) => {
+            // Efeito de pressão mais longo e suave
+            const tl = gsap.timeline();
+            
+            tl.to(element, {
+                scale: 0.97,
+                duration: 0.15,
+                ease: "power2.in"
+            })
+            .to(element, {
+                scale: 1.02,
+                duration: 0.25,
+                ease: "back.out(2)"
+            })
+            .to(element, {
+                scale: 1,
+                duration: 0.2,
+                ease: "power2.out"
             });
+            
+            // Ripple effect sutil
+            if (icon) {
+                gsap.fromTo(icon, 
+                    { scale: 1 },
+                    {
+                        scale: 1.2,
+                        duration: 0.3,
+                        ease: "power2.out",
+                        yoyo: true,
+                        repeat: 1
+                    }
+                );
+            }
         });
     }
 
-    // Animação de entrada em cascata mais suave
+    // Animação de entrada em cascata etérea com condensação
     cascadeIn(elements, startDelay = 0) {
         if (!this.isGSAPLoaded || !elements.length) return;
 
         gsap.fromTo(elements,
             {
                 opacity: 0,
-                y: 20
+                y: 25,
+                scale: 0.96,
+                filter: 'blur(5px)'
             },
             {
                 opacity: 1,
                 y: 0,
-                duration: 0.5,
-                stagger: 0.1,
+                scale: 1,
+                filter: 'blur(0px)',
+                duration: 0.8,
+                stagger: {
+                    each: 0.12,
+                    ease: "power2.out"
+                },
                 delay: startDelay,
-                ease: "power1.out"
+                ease: "power2.out"
             }
         );
     }
 
-    // Animação de respiração mais sutil
+    // Animação de respiração orgânica ultra suave
     organicBreathe(element) {
         if (!this.isGSAPLoaded || !element) return;
 
+        // Respiração com múltiplas propriedades para efeito etéreo
         gsap.to(element, {
-            scale: 1.02,
-            duration: 3,
+            scale: 1.015,
+            opacity: 0.95,
+            duration: 4,
             ease: "sine.inOut",
             yoyo: true,
             repeat: -1
         });
+        
+        // Adiciona uma leve rotação para movimento orgânico
+        gsap.to(element, {
+            rotation: 2,
+            duration: 5,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+            delay: 0.5
+        });
+    }
+
+    // Pulso de glow suave para elementos destacados
+    glowPulse(element, color = 'rgba(128, 187, 162, 0.4)') {
+        if (!this.isGSAPLoaded || !element) return;
+
+        gsap.to(element, {
+            boxShadow: `0 0 30px ${color}, 0 0 60px ${color}, inset 0 0 20px ${color}`,
+            duration: 2,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1
+        });
+    }
+
+    // Transição de blur animada para glassmorphism
+    animateGlassmorphism(element, fromBlur = 0, toBlur = 12, duration = 0.8) {
+        if (!this.isGSAPLoaded || !element) return;
+
+        const steps = 60;
+        const increment = (toBlur - fromBlur) / steps;
+        let currentStep = 0;
+
+        const animate = () => {
+            if (currentStep < steps) {
+                const blur = fromBlur + (increment * currentStep);
+                element.style.backdropFilter = `blur(${blur}px) saturate(180%)`;
+                element.style.webkitBackdropFilter = `blur(${blur}px) saturate(180%)`;
+                currentStep++;
+                requestAnimationFrame(animate);
+            }
+        };
+
+        animate();
     }
 
     // Fallback para quando GSAP não está disponível
@@ -1030,13 +1467,15 @@ class OrganicAnimations {
         if (exitElement) {
             exitElement.style.opacity = '0';
             exitElement.style.transform = 'translateX(-20px)';
+            exitElement.style.transition = 'all 0.5s ease-in';
         }
         
         if (enterElement) {
             setTimeout(() => {
                 enterElement.style.opacity = '1';
                 enterElement.style.transform = 'translateX(0)';
-            }, 200);
+                enterElement.style.transition = 'all 0.7s ease-out';
+            }, 250);
         }
     }
 }
