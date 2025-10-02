@@ -104,6 +104,31 @@ body {
     overflow: hidden; /* Bloqueia scroll em X e Y */
 }
 
+/* ========================================
+   SCROLLBAR OCULTA (MANTÉM FUNCIONALIDADE)
+   ======================================== */
+
+/* 
+ * Oculta completamente as barras de rolagem em todos os navegadores
+ * mantendo a funcionalidade de scroll intacta. Isso elimina a aparição
+ * visual estranha da scrollbar durante as transições entre telas,
+ * preservando a estética orgânica e fluida do projeto.
+ *
+ * Compatibilidade:
+ * - Firefox: scrollbar-width: none
+ * - Internet Explorer 10+: -ms-overflow-style: none  
+ * - Chrome/Safari/Edge: ::-webkit-scrollbar { display: none }
+ */
+* {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+/* Oculta scrollbar no WebKit (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+    display: none;
+}
+
 #app {
     width: 100%;
     max-width: var(--container-max-width);
@@ -117,10 +142,6 @@ body {
     position: relative;
     transition: opacity 0.4s ease-in-out;
     overflow: hidden; /* Previne scroll durante transições */
-}
-
-#app.fading {
-    opacity: 0;
 }
 
 .screen {
@@ -1390,48 +1411,73 @@ button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
     backdrop-filter: blur(18px) saturate(200%);
     -webkit-backdrop-filter: blur(18px) saturate(200%);
     
-    transform: translateY(-6px) scale(1.02);
+    transform: translateY(-8px) scale(1.03);
     box-shadow: 
-        0 12px 40px rgba(0, 0, 0, 0.12),
-        0 0 0 1px rgba(128, 187, 162, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7),
-        0 0 32px rgba(128, 187, 162, 0.12);
+        0 16px 48px rgba(0, 0, 0, 0.15),
+        0 0 0 2px rgba(128, 187, 162, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 0 40px rgba(128, 187, 162, 0.2);
     
-    border-color: rgba(128, 187, 162, 0.3);
+    border-color: rgba(128, 187, 162, 0.4);
+    
+    /* Indicador visual de que é clicável */
+    cursor: pointer;
 }
 
 .specialist-card.selected {
-    /* Estado selecionado com glow */
+    /* Estado selecionado com glow vibrante */
     background: linear-gradient(
         135deg,
-        rgba(128, 187, 162, 0.2) 0%,
-        rgba(128, 187, 162, 0.1) 100%
+        rgba(128, 187, 162, 0.3) 0%,
+        rgba(128, 187, 162, 0.15) 100%
     );
-    backdrop-filter: blur(16px) saturate(200%);
-    -webkit-backdrop-filter: blur(16px) saturate(200%);
+    backdrop-filter: blur(18px) saturate(220%);
+    -webkit-backdrop-filter: blur(18px) saturate(220%);
     
-    border-color: rgba(128, 187, 162, 0.4);
+    transform: translateY(-4px) scale(1.02);
+    border: 2px solid rgba(128, 187, 162, 0.6);
     box-shadow: 
-        0 8px 32px rgba(128, 187, 162, 0.25),
-        inset 0 0 24px rgba(128, 187, 162, 0.1),
-        0 0 48px rgba(128, 187, 162, 0.2);
+        0 12px 40px rgba(128, 187, 162, 0.35),
+        0 0 0 3px rgba(128, 187, 162, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 0 60px rgba(128, 187, 162, 0.3);
+    
+    /* Animação de pulso sutil para confirmação */
+    animation: selected-pulse 2.5s ease-in-out infinite;
 }
 
 .specialist-photo {
-    font-size: 4em;
-    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.specialist-avatar {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s var(--organic-ease);
+}
+
+.specialist-card:hover .specialist-avatar {
+    transform: scale(1.05);
 }
 
 .specialist-info h3 {
     margin: 0;
     font-size: 1.2em;
     color: var(--text-main);
+    font-weight: 600;
+    letter-spacing: 0.05em;
 }
 
 .specialist-specialty {
     font-size: 0.9em;
     color: var(--text-secondary);
     font-weight: 500;
+    letter-spacing: 0.03em;
 }
 
 .specialist-gender {
@@ -1608,6 +1654,22 @@ button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 12px;
     margin-bottom: 20px;
+    padding: 16px;
+    
+    /* Container com glassmorphism sutil para delimitar área */
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0.2) 100%
+    );
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+    
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .time-slot {
@@ -1637,7 +1699,7 @@ button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
 }
 
 .time-slot:hover {
-    /* Vidro intenso */
+    /* Vidro intenso com glow */
     background: linear-gradient(
         135deg,
         rgba(255, 255, 255, 0.95) 0%,
@@ -1646,12 +1708,16 @@ button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
     backdrop-filter: blur(16px) saturate(200%);
     -webkit-backdrop-filter: blur(16px) saturate(200%);
     
-    transform: translateY(-3px) scale(1.05);
-    border-color: rgba(128, 187, 162, 0.4);
+    transform: translateY(-4px) scale(1.08);
+    border: 2px solid rgba(128, 187, 162, 0.5);
     box-shadow: 
-        0 8px 24px rgba(0, 0, 0, 0.08),
-        0 0 20px rgba(128, 187, 162, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        0 12px 32px rgba(0, 0, 0, 0.12),
+        0 0 24px rgba(128, 187, 162, 0.2),
+        0 0 0 2px rgba(128, 187, 162, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    
+    /* Pulso sutil para indicar interatividade */
+    animation: gentle-pulse 1.5s ease-in-out infinite;
 }
 
 .time-slot.selected {
@@ -1700,9 +1766,22 @@ button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
 }
 
 .specialist-photo-large {
-    font-size: 5em;
-    line-height: 1;
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+}
+
+.specialist-photo-large .specialist-avatar {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s var(--organic-ease);
+}
+
+.specialist-detail-card:hover .specialist-avatar {
+    transform: scale(1.08) rotate(2deg);
 }
 
 .specialist-details {
@@ -1714,25 +1793,48 @@ button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
     margin: 0 0 8px 0;
     font-size: 1.3em;
     color: var(--text-main);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.specialist-details .specialist-specialty {
+    font-size: 1em;
+    color: var(--text-main);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
 }
 
 .specialist-description {
-    font-size: 0.9em;
+    font-size: 0.85em;
     line-height: 1.5;
     color: var(--text-secondary);
+    font-weight: 300;
+    letter-spacing: 0.02em;
     margin: 12px 0;
+}
+
+.specialist-details .specialist-gender {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    margin-bottom: 8px;
 }
 
 .specialist-price-large {
     font-size: 1.4em;
     font-weight: 600;
     color: var(--highlight-success);
+    letter-spacing: 0.03em;
     margin: 12px 0;
 }
 
 .specialist-availability {
-    font-size: 0.9em;
+    font-size: 0.85em;
     color: var(--text-secondary);
+    font-weight: 400;
+    letter-spacing: 0.02em;
     margin: 8px 0;
 }
 
@@ -1801,6 +1903,24 @@ button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
     50% {
         backdrop-filter: blur(14px) saturate(190%);
         opacity: 0.98;
+    }
+}
+
+/* Animação para elementos selecionados */
+@keyframes selected-pulse {
+    0%, 100% { 
+        box-shadow: 
+            0 12px 40px rgba(128, 187, 162, 0.35),
+            0 0 0 3px rgba(128, 187, 162, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.6),
+            0 0 60px rgba(128, 187, 162, 0.3);
+    }
+    50% { 
+        box-shadow: 
+            0 16px 48px rgba(128, 187, 162, 0.45),
+            0 0 0 4px rgba(128, 187, 162, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.7),
+            0 0 80px rgba(128, 187, 162, 0.4);
     }
 }
 

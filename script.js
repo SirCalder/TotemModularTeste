@@ -43,7 +43,6 @@ const specialists = [
         gender: 'Feminino',
         specialty: 'Psicologia Clínica',
         description: 'Especialista em terapia cognitivo-comportamental e atendimento de ansiedade',
-        photo: '👩‍⚕️',
         price: 180.00,
         availableDays: [1, 2, 3, 4, 5], // Segunda a Sexta
         availableHours: ['08:00', '09:00', '10:00', '14:00', '15:00', '16:00']
@@ -54,7 +53,6 @@ const specialists = [
         gender: 'Masculino',
         specialty: 'Psicologia',
         description: 'Atendimento a adultos e adolescentes, especialista em desenvolvimento pessoal',
-        photo: '👨‍⚕️',
         price: 180.00,
         availableDays: [0, 2, 4], // Domingo, Terça, Quinta
         availableHours: ['09:00', '10:00', '11:00', '14:00', '15:00']
@@ -65,7 +63,6 @@ const specialists = [
         gender: 'Feminino',
         specialty: 'Nutrição',
         description: 'Nutricionista especializada em reeducação alimentar e nutrição esportiva',
-        photo: '👩‍⚕️',
         price: 150.00,
         availableDays: [1, 3, 5], // Segunda, Quarta, Sexta
         availableHours: ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00']
@@ -76,7 +73,6 @@ const specialists = [
         gender: 'Masculino',
         specialty: 'Acupuntura',
         description: 'Acupunturista com 15 anos de experiência em medicina tradicional chinesa',
-        photo: '👨‍⚕️',
         price: 120.00,
         availableDays: [2, 3, 4], // Terça, Quarta, Quinta
         availableHours: ['08:00', '10:00', '14:00', '16:00', '17:00']
@@ -86,16 +82,15 @@ const specialists = [
 // --- Funções de Navegação e Renderização ---
 
 function changeScreen(newScreen) {
-    app.classList.add('fading');
-    setTimeout(() => {
-        state.previousScreen = state.currentScreen;
-        state.currentScreen = newScreen;
-        render();
-        // Remove a classe fading após um pequeno delay para permitir que as animações de entrada comecem
-        setTimeout(() => {
-            app.classList.remove('fading');
-        }, 50);
-    }, 400);
+    // Remove qualquer classe de transição anterior
+    app.classList.remove('fading');
+    
+    // Atualiza o estado imediatamente
+    state.previousScreen = state.currentScreen;
+    state.currentScreen = newScreen;
+    
+    // Renderiza com transição GSAP orgânica
+    render();
 }
 
 function render() {
@@ -203,6 +198,13 @@ function applyAdvancedAnimations() {
         if (heroIllustration) {
             organicAnimations.organicBreathe(heroIllustration);
         }
+
+        // Aplica micro-interações orgânicas aos elementos interativos
+        const interactiveElements = document.querySelectorAll('.primary-button, .secondary-button, .action-button, .specialist-card, .reason-card, .calendar-day.available, .time-slot');
+        interactiveElements.forEach(element => {
+            const scale = element.classList.contains('specialist-card') || element.classList.contains('reason-card') ? 1.03 : 1.02;
+            organicAnimations.organicHover(element, scale);
+        });
     });
 }
 
@@ -582,7 +584,7 @@ function renderSchedulingScreen() {
             <div class="specialists-selection animate-fade-in-stagger-3">
                 ${availableSpecialists.map(specialist => `
                     <div class="specialist-card" data-specialist-id="${specialist.id}" tabindex="0" role="button">
-                        <div class="specialist-photo">${specialist.photo}</div>
+                        <div class="specialist-photo">${generateSpecialistAvatar(specialist)}</div>
                         <div class="specialist-info">
                             <h3>${specialist.name}</h3>
                             <p class="specialist-specialty">${specialist.specialty}</p>
@@ -638,7 +640,7 @@ function renderSpecialistsScreen() {
             <div class="specialists-grid animate-fade-in-stagger-2">
                 ${specialists.map(specialist => `
                     <div class="specialist-detail-card">
-                        <div class="specialist-photo-large">${specialist.photo}</div>
+                        <div class="specialist-photo-large">${generateSpecialistAvatar(specialist)}</div>
                         <div class="specialist-details">
                             <h3>${specialist.name.toUpperCase()}</h3>
                             <p class="specialist-specialty">${specialist.specialty.toUpperCase()}</p>
@@ -834,8 +836,31 @@ function addEventListeners() {
             const specialistId = parseInt(card.dataset.specialistId);
             state.newAppointment.specialistId = specialistId;
             
-            // Remove seleção anterior
-            document.querySelectorAll('.specialist-card').forEach(c => c.classList.remove('selected'));
+            // Feedback visual imediato
+            if (organicAnimations.isGSAPLoaded) {
+                gsap.to(card, {
+                    scale: 0.95,
+                    duration: 0.1,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        gsap.to(card, {
+                            scale: 1.02,
+                            duration: 0.3,
+                            ease: "back.out(1.2)"
+                        });
+                    }
+                });
+            }
+            
+            // Remove seleção anterior com transição suave
+            document.querySelectorAll('.specialist-card').forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('selected');
+                    if (organicAnimations.isGSAPLoaded) {
+                        gsap.to(c, { scale: 1, duration: 0.3, ease: "power2.out" });
+                    }
+                }
+            });
             card.classList.add('selected');
             
             // Mostra o calendário
@@ -876,13 +901,39 @@ function addCalendarListeners(specialistId) {
             document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
             dayElement.classList.add('selected');
             
-            // Mostra os horários disponíveis
+            // Mostra os horários disponíveis com animação suave
             const timeSlotsContainer = document.getElementById('time-slots-container');
             timeSlotsContainer.innerHTML = generateTimeSlots(specialistId, selectedDate);
-            timeSlotsContainer.style.display = 'block';
+            
+            // Animação GSAP para aparição suave dos slots
+            if (organicAnimations.isGSAPLoaded) {
+                // Prepara o container para animação
+                gsap.set(timeSlotsContainer, { 
+                    opacity: 0, 
+                    y: 20, 
+                    display: 'block' 
+                });
+                
+                // Anima entrada do container
+                gsap.to(timeSlotsContainer, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.4,
+                    ease: "power2.out"
+                });
+                
+                // Anima entrada dos slots individuais em cascata
+                setTimeout(() => {
+                    const timeSlots = timeSlotsContainer.querySelectorAll('.time-slot');
+                    organicAnimations.cascadeIn(Array.from(timeSlots), 0.1);
+                }, 100);
+            } else {
+                // Fallback sem GSAP
+                timeSlotsContainer.style.display = 'block';
+            }
             
             // Adiciona listeners para os horários
-            setTimeout(() => addTimeSlotListeners(specialistId), 100);
+            setTimeout(() => addTimeSlotListeners(specialistId), 200);
         };
         
         dayElement.addEventListener('click', handleDaySelect);
@@ -902,8 +953,31 @@ function addTimeSlotListeners(specialistId) {
             const selectedTime = slot.dataset.time;
             state.newAppointment.time = selectedTime;
             
-            // Remove seleção anterior
-            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            // Feedback visual imediato
+            if (organicAnimations.isGSAPLoaded) {
+                gsap.to(slot, {
+                    scale: 0.9,
+                    duration: 0.1,
+                    ease: "power2.out",
+                    onComplete: () => {
+                        gsap.to(slot, {
+                            scale: 1.05,
+                            duration: 0.4,
+                            ease: "back.out(1.3)"
+                        });
+                    }
+                });
+            }
+            
+            // Remove seleção anterior com transição suave
+            document.querySelectorAll('.time-slot').forEach(s => {
+                if (s !== slot) {
+                    s.classList.remove('selected');
+                    if (organicAnimations.isGSAPLoaded) {
+                        gsap.to(s, { scale: 1, duration: 0.3, ease: "power2.out" });
+                    }
+                }
+            });
             slot.classList.add('selected');
         };
         
@@ -1087,6 +1161,76 @@ function generateTimeSlots(specialistId, selectedDate) {
     `;
 }
 
+function generateSpecialistAvatar(specialist) {
+    // Define cores baseadas na especialidade
+    const specialtyColors = {
+        'Psicologia Clínica': { primary: '#80BBA2', secondary: '#5C5B7C' },
+        'Psicologia': { primary: '#80BBA2', secondary: '#5C5B7C' },
+        'Nutrição': { primary: '#9FB894', secondary: '#7A8F6E' },
+        'Acupuntura': { primary: '#A8C8B8', secondary: '#6B8A7A' },
+        'default': { primary: '#80BBA2', secondary: '#5C5B7C' }
+    };
+    
+    const colors = specialtyColors[specialist.specialty] || specialtyColors.default;
+    
+    // Gera avatar baseado no gênero
+    const isFemine = specialist.gender === 'Feminino';
+    
+    return `
+        <svg class="specialist-avatar" width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="avatarGradient-${specialist.id}" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:${colors.primary};stop-opacity:0.8" />
+                    <stop offset="100%" style="stop-color:${colors.secondary};stop-opacity:1" />
+                </linearGradient>
+                <filter id="avatarShadow-${specialist.id}" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="${colors.secondary}" flood-opacity="0.3"/>
+                </filter>
+            </defs>
+            
+            <!-- Círculo de fundo -->
+            <circle cx="30" cy="30" r="28" fill="url(#avatarGradient-${specialist.id})" filter="url(#avatarShadow-${specialist.id})"/>
+            
+            <!-- Silhueta da pessoa -->
+            <g fill="white" opacity="0.9">
+                <!-- Cabeça -->
+                <circle cx="30" cy="20" r="8"/>
+                
+                <!-- Corpo -->
+                <path d="M15 45 Q15 35 22 32 Q30 30 38 32 Q45 35 45 45 L45 50 Q45 52 43 52 L17 52 Q15 52 15 50 Z"/>
+                
+                ${isFemine ? `
+                    <!-- Cabelo feminino - mais ondulado -->
+                    <path d="M22 12 Q18 10 16 14 Q15 18 18 22 Q20 20 22 18 Q24 14 26 12 Q30 10 34 12 Q36 14 38 18 Q40 20 42 22 Q45 18 44 14 Q42 10 38 12 Q34 8 30 8 Q26 8 22 12 Z" opacity="0.8"/>
+                ` : `
+                    <!-- Cabelo masculino - mais curto -->
+                    <path d="M22 12 Q26 8 30 8 Q34 8 38 12 Q40 14 38 16 Q34 12 30 12 Q26 12 22 16 Q20 14 22 12 Z" opacity="0.8"/>
+                `}
+            </g>
+            
+            <!-- Ícone da especialidade -->
+            <g transform="translate(38, 38)" fill="white" opacity="0.7">
+                ${specialist.specialty.includes('Psicologia') ? `
+                    <!-- Ícone de coração/mente -->
+                    <path d="M6 2 Q8 0 10 2 Q12 0 14 2 Q16 4 14 8 L10 12 L6 8 Q4 4 6 2 Z" transform="scale(0.8)"/>
+                ` : specialist.specialty === 'Nutrição' ? `
+                    <!-- Ícone de folha -->
+                    <path d="M10 2 Q14 2 16 6 Q16 10 12 14 Q8 12 6 8 Q6 4 10 2 Z M8 6 Q10 8 12 10" stroke="white" stroke-width="0.5" fill="none" transform="scale(0.8)"/>
+                ` : specialist.specialty === 'Acupuntura' ? `
+                    <!-- Ícone de agulha/energia -->
+                    <circle cx="10" cy="6" r="1.5"/>
+                    <circle cx="10" cy="10" r="1.5"/>
+                    <circle cx="10" cy="14" r="1.5"/>
+                    <path d="M6 10 L14 10 M8 8 L12 12 M8 12 L12 8" stroke="white" stroke-width="0.5" transform="scale(0.8)"/>
+                ` : `
+                    <!-- Ícone genérico de saúde -->
+                    <path d="M8 4 L12 4 L12 8 L16 8 L16 12 L12 12 L12 16 L8 16 L8 12 L4 12 L4 8 L8 8 Z" transform="scale(0.6)"/>
+                `}
+            </g>
+        </svg>
+    `;
+}
+
 function showError(inputElement, message) {
     const errorDiv = document.createElement('div');
     errorDiv.id = 'cpf-error';
@@ -1172,28 +1316,35 @@ class OrganicAnimations {
         this.isGSAPLoaded = typeof gsap !== 'undefined';
         
         if (this.isGSAPLoaded) {
+            // Defaults orgânicos para todo o projeto
             gsap.defaults({ 
-                ease: "power2.out", 
-                duration: 0.6 
+                ease: "sine.out", // Easing mais natural e orgânico
+                duration: 0.7 // Duração ligeiramente mais lenta para fluidez
             });
+            
+            // Registra easings personalizados se disponível
+            if (gsap.parseEase) {
+                gsap.registerEase("organicEase", "M0,0 C0.25,0.46 0.45,0.94 1,1");
+            }
         }
     }
 
     /**
-     * Transição de tela suave e elegante, focada em fluidez.
-     * A tela antiga desliza para cima e desaparece, a nova desliza de baixo e aparece.
+     * Transição de tela orgânica e respiratória, seguindo a filosofia "Organic Calm".
+     * Movimento fluido com easing natural e overlap suave.
      */
     screenTransition(exitElement, enterElement) {
         if (!this.isGSAPLoaded) return this.fallbackTransition(exitElement, enterElement);
 
         const tl = gsap.timeline();
 
-        // Animação de saída - valores absolutos
+        // Animação de saída - movimento orgânico com escala sutil
         tl.to(exitElement, {
             opacity: 0,
-            y: -30,
-            duration: 0.4,
-            ease: "power2.in",
+            y: -20,
+            scale: 0.95,
+            duration: 0.6,
+            ease: "sine.in", // Easing mais orgânico
             onComplete: () => {
                 // Remove IMEDIATAMENTE ao terminar animação de saída
                 if (exitElement && exitElement.parentNode) {
@@ -1202,53 +1353,89 @@ class OrganicAnimations {
             }
         });
 
-        // Animação de entrada - valores absolutos para evitar acúmulo
+        // Animação de entrada - "respiração" orgânica
         tl.fromTo(enterElement, 
             {
                 opacity: 0,
-                y: 30
+                y: 40,
+                scale: 1.05
             },
             {
                 opacity: 1,
                 y: 0,
-                duration: 0.5,
-                ease: "power2.out",
+                scale: 1,
+                duration: 0.8,
+                ease: "sine.out", // Easing que combina com a saída
                 clearProps: "transform" // Limpa transform ao finalizar
             }, 
-            "-=0.2" // Começa 0.2s antes da animação de saída terminar
+            "-=0.4" // Overlap maior para fluidez
         );
 
         return tl;
     }
 
     /**
-     * Animação de entrada em cascata para múltiplos elementos (como cards).
+     * Animação de entrada em cascata orgânica para múltiplos elementos.
+     * Movimento natural com escala sutil e easing suave.
      */
     cascadeIn(elements, delay = 0) {
         if (!this.isGSAPLoaded || !elements.length) return;
 
         gsap.from(elements, {
             opacity: 0,
-            y: 20,
-            duration: 0.5,
-            stagger: 0.1, // Atraso entre cada elemento
+            y: 30,
+            scale: 0.95,
+            duration: 0.7,
+            ease: "sine.out", // Easing orgânico consistente
+            stagger: 0.08, // Timing mais rápido e fluido
             delay: delay,
+            clearProps: "transform" // Limpa propriedades ao final
         });
     }
 
     /**
      * Animação de "respiração" orgânica para elementos de destaque.
+     * Movimento suave e natural como uma respiração calma.
      */
     organicBreathe(element) {
         if (!this.isGSAPLoaded || !element) return;
 
         gsap.to(element, {
-            scale: 1.03,
-            duration: 4, // Ciclo longo e calmo
-            ease: "sine.inOut",
+            scale: 1.02, // Movimento mais sutil
+            duration: 3.5, // Ciclo ligeiramente mais rápido
+            ease: "sine.inOut", // Mantém o easing orgânico
             yoyo: true, // Vai e volta
             repeat: -1 // Infinitamente
         });
+    }
+
+    /**
+     * Micro-interação orgânica para botões e elementos interativos.
+     * Feedback visual sutil mas perceptível.
+     */
+    organicHover(element, scale = 1.02) {
+        if (!this.isGSAPLoaded || !element) return;
+
+        const handleMouseEnter = () => {
+            gsap.to(element, {
+                scale: scale,
+                duration: 0.3,
+                ease: "sine.out"
+            });
+        };
+
+        const handleMouseLeave = () => {
+            gsap.to(element, {
+                scale: 1,
+                duration: 0.4,
+                ease: "sine.out"
+            });
+        };
+
+        element.addEventListener('mouseenter', handleMouseEnter);
+        element.addEventListener('mouseleave', handleMouseLeave);
+        
+        return { handleMouseEnter, handleMouseLeave };
     }
 
     // Fallback simples se o GSAP não carregar
