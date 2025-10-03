@@ -1,4 +1,9 @@
-# 📋 CHANGELOG COMPLETO - Correção de Empilhamento
+⚠️ **AVISO DE ARQUIVO HISTÓRICO** ⚠️  
+Este documento refere-se a uma versão anterior do projeto "Amanhecer", quando era um totem de atendimento visual. O projeto evoluiu para um agente de IA conversacional. As informações aqui contidas são mantidas apenas para contexto histórico do desenvolvimento.
+
+---
+
+# 📋 Changelog - Totem de Bem-Estar Amanhecer
 
 ## Versão 3.3 - "Solução Definitiva GSAP"
 **Data:** 2 de outubro de 2025

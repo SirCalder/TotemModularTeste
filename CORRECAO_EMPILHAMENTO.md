@@ -1,3 +1,8 @@
+⚠️ **AVISO DE ARQUIVO HISTÓRICO** ⚠️  
+Este documento refere-se a uma versão anterior do projeto "Amanhecer", quando era um totem de atendimento visual. O projeto evoluiu para um agente de IA conversacional. As informações aqui contidas são mantidas apenas para contexto histórico do desenvolvimento.
+
+---
+
 # 🚨 CORREÇÃO CRÍTICA - Empilhamento de Telas
 
 ## 🎯 Problema Final Identificado

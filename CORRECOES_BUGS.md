@@ -1,6 +1,11 @@
 # 🔧 Correções de Bugs e Otimizações - 2 de outubro de 2025
 
-## 🐛 Problema Identificado
+#⚠️ **AVISO DE ARQUIVO HISTÓRICO** ⚠️  
+Este documento refere-se a uma versão anterior do projeto "Amanhecer", quando era um totem de atendimento visual. O projeto evoluiu para um agente de IA conversacional. As informações aqui contidas são mantidas apenas para contexto histórico do desenvolvimento.
+
+---
+
+# 🐛 Correções de Bugs - Totem Amanhecer
 
 ### Sintoma
 Ao navegar entre telas (clicar em botões e voltar), a tela anterior aparecia deslocada para baixo, causando problemas visuais e comprometendo a responsividade.

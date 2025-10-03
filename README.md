@@ -1,46 +1,60 @@
-# 🌅 Totem de Bem-Estar "Amanhecer"
+# 🌅 Secretaria Digital "Amanhecer"
 
-> **Uma interface de totem interativo com filosofia "Calma Orgânica"**
+> **Um agente de IA conversacional com filosofia "Calma Orgânica"**
 
-Um sistema completo de totem para clínicas de bem-estar, desenvolvido com foco na experiência do usuário e tranquilidade. A interface foi projetada para reduzir a ansiedade do paciente através de um design minimalista, suave e orgânico.
+Uma **Secretaria Digital** baseada em IA conversacional para clínicas de bem-estar, desenvolvida como MVP de um agente de atendimento modular. Combina **personalidade orgânica**, **inteligência artificial** e **interface de chat reativa** para criar uma experiência de atendimento acolhedora e eficiente.
 
 ## ✨ Características Principais
 
-### 🎨 **Filosofia Visual "Calma Orgânica"**
-- **Design Minimalista**: Interface limpa que "respira" e guia o usuário gentilmente
-- **Paleta Suave**: Cores dessaturadas com gradientes etéreos (#E9EFFF → #F8F4F2)
-- **Tipografia Poppins**: Formas arredondadas e geométricas para máxima legibilidade
-- **Animações Fluidas**: Transições suaves e micro-interações que humanizam a experiência
+### 🤖 **Agente de IA com Personalidade "Calma Orgânica"**
+- **Personalidade Consistente**: Definida via System Prompt com tom acolhedor e profissional
+- **Respostas Contextuais**: Mantém histórico da conversa para interações inteligentes
+- **Capacidades Modulares**: Funcionalidades facilmente expansíveis via prompts
+- **Fallbacks Graceful**: Lida elegantemente com cenários inesperados
 
-### 🚀 **Funcionalidades**
-- **Check-in Digital**: Sistema de identificação por CPF com validação automática
-- **Agendamento Online**: Interface intuitiva para novos agendamentos
-- **Múltiplas Especialidades**: Psicologia, Nutrição, Acupuntura e mais
-- **Confirmação Visual**: Animações de conclusão que celebram o sucesso
-- **Sistema de Pagamento**: Interface simulada para pagamentos por aproximação
+### � **Interface de Chat Reativa**
+- **Conversa Fluida**: Interface moderna e responsiva para diálogo natural
+- **Indicadores Visuais**: Status de digitação, processamento e estados da IA
+- **Histórico Persistente**: Mantém contexto durante toda a sessão
+- **Design Orgânico**: Preserva a filosofia visual "Calma Orgânica"
 
-### 🎭 **Experiência do Usuário**
-- **Entrada Escalonada**: Elementos aparecem em sequência coreografada
-- **Feedback Tátil**: Hover effects e micro-interações responsivas
-- **Respiração Visual**: Campo de CPF com animação sutil que guia o foco
-- **Ícone de Conclusão**: Desenho animado em tempo real para feedback positivo
+### 🧠 **Integração com Google Gemini API**
+- **IA de Ponta**: Processamento avançado de linguagem natural
+- **Contextualização Inteligente**: Respostas baseadas no histórico da conversa
+- **Gestão de API**: Sistema robusto de chamadas e tratamento de erros
+- **Performance Otimizada**: Requisições eficientes e caching inteligente
+
+### 🔧 **Arquitetura Modular**
+- **System Prompt Flexível**: Fácil configuração de personalidade e capacidades
+- **Separação de Responsabilidades**: UI, lógica de IA e dados bem estruturados
+- **Estado Conversacional**: Gestão inteligente do fluxo de diálogo
+- **Zero Build Tools**: HTML/CSS/JS puro para deployment imediato
 
 ## 🛠️ **Tecnologia**
 
-**Stack Simplificada:**
-- **HTML5** - Estrutura semântica
-- **CSS3** - Estilos com animações avançadas e backdrop-filter
-- **JavaScript Vanilla** - Lógica de aplicação sem dependências
+**Stack Conversacional:**
+- **HTML5** - Estrutura semântica para interface de chat
+- **CSS3** - Design orgânico com animações suaves
+- **JavaScript Vanilla** - Lógica conversacional e integração com IA
+- **Google Gemini API** - Motor de inteligência artificial
 
 **Características Técnicas:**
-- ✅ **Zero dependências** - Funciona em qualquer navegador moderno
-- ✅ **Responsivo** - Adaptável a diferentes tamanhos de tela
-- ✅ **Performance otimizada** - Carregamento instantâneo
-- ✅ **Acessível** - Foco na usabilidade e navegação por teclado
+- ✅ **IA Integrada** - Powered by Google Gemini para respostas inteligentes
+- ✅ **Responsivo** - Interface de chat adaptável a qualquer dispositivo
+- ✅ **Performance otimizada** - Carregamento instantâneo e requests eficientes
+- ✅ **Modular** - Capacidades da IA facilmente expansíveis
+- ✅ **Acessível** - Compatível com screen readers e navegação por teclado
 
 ## 🚀 **Como Executar**
 
-**Pré-requisitos:** Apenas um navegador web moderno!
+**Pré-requisitos:**
+- Navegador web moderno
+- **API Key do Google Gemini** (obrigatório para funcionalidade de IA)
+
+### Configuração da API
+1. Obtenha uma API Key do Google AI Studio
+2. Configure a variável `API_KEY` no arquivo `script.js`
+3. Certifique-se de que as requisições CORS estão habilitadas
 
 ### Método 1: Execução Direta
 ```bash
@@ -50,16 +64,12 @@ git clone https://github.com/SirCalder/TotemModularTeste.git
 # Navegue até a pasta
 cd TotemModularTeste
 
+# Configure sua API_KEY no script.js
 # Abra o index.html em qualquer navegador
-# No Windows:
 start index.html
-# No macOS:
-open index.html
-# No Linux:
-xdg-open index.html
 ```
 
-### Método 2: Servidor Local (Opcional)
+### Método 2: Servidor Local (Recomendado)
 ```bash
 # Com Python
 python -m http.server 8000
@@ -70,19 +80,18 @@ npx http-server
 # Acesse: http://localhost:8000
 ```
 
-## 🎯 **Fluxo da Aplicação**
+## 🎯 **Fluxo Conversacional**
 
 ```mermaid
 graph TD
-    A[🏠 Tela de Boas-vindas] --> B[🔐 Identificação CPF]
-    A --> C[📅 Novo Agendamento]
-    B --> D[✅ Confirmação de Dados]
-    C --> E[🎯 Escolha do Motivo]
-    E --> F[📊 Agendamento]
-    F --> D
-    D --> G[💳 Pagamento]
-    G --> H[✨ Conclusão]
-    H --> A
+    A[💬 Usuário envia mensagem] --> B[� JavaScript captura input]
+    B --> C[🧠 Junta ao histórico + System Prompt]
+    C --> D[🌐 Chama API Google Gemini]
+    D --> E[⚡ Recebe resposta da IA]
+    E --> F[� Exibe na interface de chat]
+    F --> G{🔄 Conversa continua?}
+    G -->|Sim| A
+    G -->|Não| H[✅ Sessão finalizada]
 ```
 
 ## 🎨 **Paleta de Cores**
@@ -95,13 +104,13 @@ graph TD
 --highlight-success: #80BBA2 /* Verde-água sucesso */
 ```
 
-## 🔄 **Animações Principais**
+## 🤖 **Personalidade da IA**
 
-- **Breathing Input**: Campo de CPF pulsa suavemente para atrair atenção
-- **Fade-in Stagger**: Elementos entram em sequência com delays crescentes
-- **Completion Drawing**: Ícone de check é desenhado em tempo real
-- **Gentle Float**: Ícones flutuam suavemente para dar vida à interface
-- **Shimmer Effect**: Efeito de brilho nos cards interativos
+- **Tom Acolhedor**: Respostas calorosas mas profissionais, reflexo da "Calma Orgânica"
+- **Contextualização**: Lembra conversas anteriores para continuidade natural
+- **Capacidades Modulares**: Agendamentos, informações, suporte geral
+- **Fallback Graceful**: Lida elegantemente com perguntas fora do escopo
+- **Brevidade Inteligente**: Respostas concisas mas completas
 
 ## 📱 **Compatibilidade**
 
@@ -127,12 +136,13 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para de
 
 ## 🎉 **Criado com**
 
-- 💻 Desenvolvido com paixão por experiência do usuário
+- 🤖 Desenvolvido com IA conversacional avançada
 - 🎨 Inspirado na filosofia "Calma Orgânica"
-- ✨ Focado em bem-estar e tranquilidade
+- 💬 Focado em comunicação natural e acolhedora
+- ✨ Primeira iteração de um agente modular completo
 
 ---
 
 <div align="center">
-  <strong>🌅 Sua jornada para o bem-estar começa aqui</strong>
+  <strong>🌅 Sua secretária digital de bem-estar está aqui para ajudar</strong>
 </div>
