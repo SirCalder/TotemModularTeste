@@ -2003,3 +2003,182 @@ button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     }
 }
+
+/* ========================================
+   SELETOR DE TEMAS
+   ======================================== */
+
+.theme-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.theme-selector:hover {
+    opacity: 1;
+}
+
+.theme-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.theme-options {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.theme-button {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-button svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.5;
+    transition: all 0.3s ease;
+}
+
+.theme-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    transform: translateY(-1px);
+}
+
+.theme-button.active {
+    background: var(--highlight-success);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(128, 187, 162, 0.3);
+}
+
+.theme-button.active svg {
+    transform: scale(1.1);
+}
+
+/* Efeito de ondulação nos botões de tema */
+.theme-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.theme-button:active::before {
+    width: 40px;
+    height: 40px;
+}
+
+/* Responsividade do seletor de temas */
+@media (max-width: 480px) {
+    .theme-selector {
+        margin: 16px 0;
+    }
+    
+    .theme-options {
+        gap: 6px;
+        padding: 6px;
+    }
+    
+    .theme-button {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+    }
+    
+    .theme-button svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* ========================================
+   SISTEMA DE TEMAS ORGÂNICOS
+   ======================================== */
+
+/* TEMA: NOITE SERENA (DARK MODE) */
+body.theme-dark {
+    --bg-grad-start: #1D1E3A; /* Azul noite profundo */
+    --bg-grad-end: #3C3B5C;   /* Roxo acinzentado */
+    --text-main: #F0F0F8;     /* Texto principal claro */
+    --text-secondary: #A9A8C7;/* Texto secundário suave */
+    --highlight-success: #80BBA2; /* Mantém o verde para contraste */
+    --button-primary-bg: rgba(255, 255, 255, 0.1);
+    --button-secondary-border: rgba(255, 255, 255, 0.2);
+    --border-color: rgba(255, 255, 255, 0.15);
+
+    /* Ajuste no Glassmorphism para fundos escuros */
+    --glass-bg: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Aplica o fundo de vidro customizado para o tema escuro */
+body.theme-dark .reason-card,
+body.theme-dark .specialist-card,
+body.theme-dark .calendar-day.available,
+body.theme-dark .time-slot,
+body.theme-dark .confirmation-details {
+    background: var(--glass-bg);
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+/* TEMA: JARDIM PASTEL */
+body.theme-pastel {
+    --bg-grad-start: #F0FFF4; /* Verde menta muito claro */
+    --bg-grad-end: #FFF0F5;   /* Lavanda rosada */
+    --text-main: #5C5B7C;     /* Mantém o texto principal para legibilidade */
+    --text-secondary: #9B9AAD;
+    --highlight-success: #5F9EA0; /* Verde cadete, mais suave */
+    --button-primary-bg: #FFFFFF;
+    --button-secondary-border: #D1D0E3;
+    --border-color: rgba(92, 91, 124, 0.15);
+}
+
+/* TEMA: ROCHA E NÉVOA (MONOCROMÁTICO) */
+body.theme-mono {
+    --bg-grad-start: #E5E5E5; /* Cinza claro */
+    --bg-grad-end: #F5F5F5;   /* Quase branco */
+    --text-main: #2F2F2F;     /* Preto suave */
+    --text-secondary: #757575;/* Cinza médio */
+    --highlight-success: #424242; /* Cinza escuro para destaque */
+    --button-primary-bg: #FFFFFF;
+    --button-secondary-border: #BDBDBD;
+    --border-color: rgba(0, 0, 0, 0.1);
+}

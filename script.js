@@ -22,7 +22,81 @@ let state = {
     newAppointment: {},
     isLoading: false,
     error: null,
+    currentTheme: null, // Tema atual selecionado
 };
+
+// ========================================
+// SISTEMA DE TEMAS ORGÂNICOS
+// ========================================
+
+function setTheme(themeName) {
+    // Remove qualquer tema anterior
+    document.body.classList.remove('theme-dark', 'theme-pastel', 'theme-mono');
+    
+    // Adiciona o novo tema, se houver um
+    if (themeName) {
+        document.body.classList.add(themeName);
+        state.currentTheme = themeName;
+        console.log(`🎨 Tema alterado para: ${themeName}`);
+        
+        // Atualiza as cores do Vanta.js se estiver ativo
+        updateVantaTheme(themeName);
+        
+        // Som sutil de mudança de tema
+        if (organicEffects) {
+            organicEffects.playSound('softClick');
+        }
+    } else {
+        state.currentTheme = null;
+        console.log('🎨 Tema redefinido para o padrão (Amanhecer)');
+        
+        // Restaura cores padrão do Vanta.js
+        updateVantaTheme(null);
+    }
+}
+
+function updateVantaTheme(themeName) {
+    if (!organicEffects || !organicEffects.vantaEffect) return;
+    
+    let colors = {};
+    
+    switch(themeName) {
+        case 'theme-dark':
+            colors = {
+                highlightColor: 0x80bba2,
+                midtoneColor: 0x3c3b5c,
+                lowlightColor: 0x1d1e3a,
+                baseColor: 0x1d1e3a
+            };
+            break;
+        case 'theme-pastel':
+            colors = {
+                highlightColor: 0x5f9ea0,
+                midtoneColor: 0xfff0f5,
+                lowlightColor: 0xf0fff4,
+                baseColor: 0xf8f6f0
+            };
+            break;
+        case 'theme-mono':
+            colors = {
+                highlightColor: 0x424242,
+                midtoneColor: 0xf5f5f5,
+                lowlightColor: 0xe5e5e5,
+                baseColor: 0xf0f0f0
+            };
+            break;
+        default: // Tema padrão "Amanhecer"
+            colors = {
+                highlightColor: 0x80bba2,
+                midtoneColor: 0x5c5b7c,
+                lowlightColor: 0x2d2c42,
+                baseColor: 0xf8f6f0
+            };
+    }
+    
+    // Atualiza as cores do efeito Vanta.js
+    organicEffects.vantaEffect.setOptions(colors);
+}
 
 // Mock de dados do usuário
 const mockUserData = {
@@ -260,6 +334,55 @@ function renderWelcomeScreen() {
             </h1>
             <p class="animate-fade-in-stagger-3">Selecione uma opção para começar sua jornada de bem-estar.</p>
             <p class="subtitle animate-fade-in-stagger-3">Seu cuidado integral é nossa prioridade</p>
+            
+            <!-- Seletor de Temas Discreto -->
+            <div class="theme-selector animate-fade-in-stagger-3" role="group" aria-label="Seleção de temas">
+                <p class="theme-label">Ambiente:</p>
+                <div class="theme-options">
+                    <button class="theme-button ${state.currentTheme === null ? 'active' : ''}" 
+                            data-theme="" 
+                            aria-label="Tema Amanhecer (padrão)"
+                            title="Amanhecer - cores quentes e acolhedoras">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                    </button>
+                    <button class="theme-button ${state.currentTheme === 'theme-dark' ? 'active' : ''}" 
+                            data-theme="theme-dark" 
+                            aria-label="Tema Noite Serena"
+                            title="Noite Serena - tons escuros e contemplativos">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+                    <button class="theme-button ${state.currentTheme === 'theme-pastel' ? 'active' : ''}" 
+                            data-theme="theme-pastel" 
+                            aria-label="Tema Jardim Pastel"
+                            title="Jardim Pastel - cores suaves e primaveris">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m15.5-6.5l-4.2 4.2M12 12l-4.2-4.2m0 8.4l4.2-4.2m4.2 4.2L12 12"/>
+                        </svg>
+                    </button>
+                    <button class="theme-button ${state.currentTheme === 'theme-mono' ? 'active' : ''}" 
+                            data-theme="theme-mono" 
+                            aria-label="Tema Rocha e Névoa"
+                            title="Rocha e Névoa - tons monocromáticos elegantes">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <path d="M9 12h6m-6-4h6m-6 8h6"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
             
             <div class="button-group animate-fade-in-stagger-4" role="group" aria-label="Opções principais">
                 <button class="primary-button" id="start-journey" aria-describedby="checkin-desc">
@@ -703,6 +826,22 @@ function addEventListeners() {
         changeScreen(Screen.REASON);
     });
     document.getElementById('faq-button')?.addEventListener('click', () => changeScreen(Screen.FAQ));
+
+    // Theme Selector
+    document.querySelectorAll('.theme-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const themeName = button.dataset.theme;
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.theme-button').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Apply theme
+            setTheme(themeName || null);
+        });
+    });
 
     // Identification Screen
     document.getElementById('submit-id')?.addEventListener('click', async () => {
