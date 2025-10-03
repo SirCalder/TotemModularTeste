@@ -105,6 +105,70 @@ body {
 }
 
 /* ========================================
+   FORMAS ORGÂNICAS E DIVISORES
+   ======================================== */
+
+.organic-divider {
+    width: 100%;
+    height: auto;
+    margin: 20px 0;
+    opacity: 0.8;
+    transition: opacity 0.6s var(--organic-ease);
+}
+
+.organic-divider:hover {
+    opacity: 1;
+}
+
+.organic-divider svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Animações suaves para divisores */
+.organic-divider--breath svg path {
+    animation: gentle-breathe 4s ease-in-out infinite;
+}
+
+.organic-divider--flow svg path {
+    animation: gentle-flow 6s ease-in-out infinite;
+}
+
+@keyframes gentle-flow {
+    0%, 100% { 
+        opacity: 0.6; 
+        transform: translateX(0px);
+    }
+    50% { 
+        opacity: 1; 
+        transform: translateX(2px);
+    }
+}
+
+/* Blobs orgânicos de fundo */
+.organic-blob {
+    will-change: transform;
+    animation: organic-float 20s ease-in-out infinite;
+}
+
+.organic-blob--floating {
+    animation: organic-float 25s ease-in-out infinite reverse;
+}
+
+@keyframes organic-float {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+    33% { 
+        transform: translate(-48%, -52%) scale(1.02) rotate(120deg);
+    }
+    66% { 
+        transform: translate(-52%, -48%) scale(0.98) rotate(240deg);
+    }
+}
+
+/* ========================================
    SCROLLBAR OCULTA (MANTÉM FUNCIONALIDADE)
    ======================================== */
 

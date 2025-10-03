@@ -688,8 +688,20 @@ function renderFaqScreen() {
 
 function addEventListeners() {
     // Welcome Screen
-    document.getElementById('start-journey')?.addEventListener('click', () => changeScreen(Screen.IDENTIFICATION));
-    document.getElementById('start-scheduling')?.addEventListener('click', () => changeScreen(Screen.REASON));
+    document.getElementById('start-journey')?.addEventListener('click', () => {
+        // Som suave de início de jornada
+        if (organicEffects) {
+            organicEffects.playSound('softClick');
+        }
+        changeScreen(Screen.IDENTIFICATION);
+    });
+    document.getElementById('start-scheduling')?.addEventListener('click', () => {
+        // Som suave para agendamento
+        if (organicEffects) {
+            organicEffects.playSound('softClick');
+        }
+        changeScreen(Screen.REASON);
+    });
     document.getElementById('faq-button')?.addEventListener('click', () => changeScreen(Screen.FAQ));
 
     // Identification Screen
@@ -791,7 +803,13 @@ function addEventListeners() {
     }
 
     // Confirmation Screen
-    document.getElementById('confirm-appointment')?.addEventListener('click', () => changeScreen(Screen.PAYMENT));
+    document.getElementById('confirm-appointment')?.addEventListener('click', () => {
+        // Som de confirmação positiva
+        if (organicEffects) {
+            organicEffects.playSound('success');
+        }
+        changeScreen(Screen.PAYMENT);
+    });
     document.getElementById('back-from-confirmation')?.addEventListener('click', () => {
         const backScreen = state.userData?.id === 'Novo Agendamento' ? Screen.SCHEDULING : Screen.IDENTIFICATION;
         changeScreen(backScreen);
@@ -799,7 +817,13 @@ function addEventListeners() {
     document.getElementById('view-profile')?.addEventListener('click', () => changeScreen(Screen.PROFILE));
 
     // Payment Screen
-    document.getElementById('simulate-payment')?.addEventListener('click', () => changeScreen(Screen.COMPLETION));
+    document.getElementById('simulate-payment')?.addEventListener('click', () => {
+        // Som de pagamento bem-sucedido
+        if (organicEffects) {
+            organicEffects.playSound('success');
+        }
+        changeScreen(Screen.COMPLETION);
+    });
     document.getElementById('back-to-confirmation')?.addEventListener('click', () => changeScreen(Screen.CONFIRMATION));
 
     // Completion Screen
@@ -863,6 +887,11 @@ function addEventListeners() {
             });
             card.classList.add('selected');
             
+            // Som harmonioso para seleção de especialista
+            if (organicEffects) {
+                organicEffects.playSound('chime');
+            }
+            
             // Mostra o calendário
             const calendarContainer = document.getElementById('calendar-container');
             calendarContainer.innerHTML = generateCalendar(specialistId);
@@ -900,6 +929,11 @@ function addCalendarListeners(specialistId) {
             // Remove seleção anterior
             document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
             dayElement.classList.add('selected');
+            
+            // Som sutil de seleção de data (gota d'água)
+            if (organicEffects) {
+                organicEffects.playSound('waterDrop');
+            }
             
             // Mostra os horários disponíveis com animação suave
             const timeSlotsContainer = document.getElementById('time-slots-container');
@@ -979,6 +1013,11 @@ function addTimeSlotListeners(specialistId) {
                 }
             });
             slot.classList.add('selected');
+            
+            // Som sutil de clique suave para horários
+            if (organicEffects) {
+                organicEffects.playSound('softClick');
+            }
         };
         
         slot.addEventListener('click', handleTimeSelect);
@@ -1162,70 +1201,154 @@ function generateTimeSlots(specialistId, selectedDate) {
 }
 
 function generateSpecialistAvatar(specialist) {
-    // Define cores baseadas na especialidade
+    // Sistema de cores mais refinado baseado na especialidade e personalidade
     const specialtyColors = {
-        'Psicologia Clínica': { primary: '#80BBA2', secondary: '#5C5B7C' },
-        'Psicologia': { primary: '#80BBA2', secondary: '#5C5B7C' },
-        'Nutrição': { primary: '#9FB894', secondary: '#7A8F6E' },
-        'Acupuntura': { primary: '#A8C8B8', secondary: '#6B8A7A' },
-        'default': { primary: '#80BBA2', secondary: '#5C5B7C' }
+        'Psicologia Clínica': { 
+            primary: '#80BBA2', 
+            secondary: '#5C5B7C',
+            accent: '#A8D5BA',
+            personality: 'analytical'
+        },
+        'Psicologia': { 
+            primary: '#7FB3A3', 
+            secondary: '#5A6B7D',
+            accent: '#A8D5BA',
+            personality: 'empathetic'
+        },
+        'Nutrição': { 
+            primary: '#9FB894', 
+            secondary: '#7A8F6E',
+            accent: '#C4E5B3',
+            personality: 'nurturing'
+        },
+        'Acupuntura': { 
+            primary: '#A8C8B8', 
+            secondary: '#6B8A7A',
+            accent: '#D1E8D7',
+            personality: 'wise'
+        },
+        'default': { 
+            primary: '#80BBA2', 
+            secondary: '#5C5B7C',
+            accent: '#A8D5BA',
+            personality: 'balanced'
+        }
     };
     
     const colors = specialtyColors[specialist.specialty] || specialtyColors.default;
-    
-    // Gera avatar baseado no gênero
     const isFemine = specialist.gender === 'Feminino';
+    
+    // Gera padrão único baseado no nome (similar ao Boring Avatars)
+    const nameHash = specialist.name.split('').reduce((hash, char) => {
+        return char.charCodeAt(0) + ((hash << 5) - hash);
+    }, 0);
+    
+    // Variações baseadas no hash do nome
+    const variations = {
+        faceShape: Math.abs(nameHash % 3), // 0, 1, 2
+        eyeStyle: Math.abs(nameHash % 4),  // 0, 1, 2, 3
+        hairStyle: Math.abs(nameHash % 3), // 0, 1, 2
+        accessories: Math.abs(nameHash % 2) // 0, 1
+    };
     
     return `
         <svg class="specialist-avatar" width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <linearGradient id="avatarGradient-${specialist.id}" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:${colors.primary};stop-opacity:0.8" />
+                <!-- Gradiente principal personalizado -->
+                <radialGradient id="avatarGradient-${specialist.id}" cx="0.3" cy="0.3" r="0.8">
+                    <stop offset="0%" style="stop-color:${colors.accent};stop-opacity:0.9" />
+                    <stop offset="60%" style="stop-color:${colors.primary};stop-opacity:0.8" />
                     <stop offset="100%" style="stop-color:${colors.secondary};stop-opacity:1" />
-                </linearGradient>
-                <filter id="avatarShadow-${specialist.id}" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="${colors.secondary}" flood-opacity="0.3"/>
+                </radialGradient>
+                
+                <!-- Sombra suave e orgânica -->
+                <filter id="organicShadow-${specialist.id}" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                    <feOffset dx="0" dy="2" result="offset"/>
+                    <feFlood flood-color="${colors.secondary}" flood-opacity="0.2"/>
+                    <feComposite in2="offset" operator="in"/>
+                    <feMerge>
+                        <feMergeNode/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
                 </filter>
+                
+                <!-- Padrão de textura sutil -->
+                <pattern id="organicTexture-${specialist.id}" patternUnits="userSpaceOnUse" width="4" height="4">
+                    <rect width="4" height="4" fill="none"/>
+                    <circle cx="2" cy="2" r="0.5" fill="white" opacity="0.1"/>
+                </pattern>
             </defs>
             
-            <!-- Círculo de fundo -->
-            <circle cx="30" cy="30" r="28" fill="url(#avatarGradient-${specialist.id})" filter="url(#avatarShadow-${specialist.id})"/>
+            <!-- Fundo orgânico com forma única -->
+            <path d="M30 2 Q45 8 52 23 Q58 30 52 37 Q45 52 30 58 Q15 52 8 37 Q2 30 8 23 Q15 8 30 2 Z" 
+                  fill="url(#avatarGradient-${specialist.id})" 
+                  filter="url(#organicShadow-${specialist.id})"/>
             
-            <!-- Silhueta da pessoa -->
-            <g fill="white" opacity="0.9">
-                <!-- Cabeça -->
-                <circle cx="30" cy="20" r="8"/>
+            <!-- Textura orgânica sutil -->
+            <path d="M30 2 Q45 8 52 23 Q58 30 52 37 Q45 52 30 58 Q15 52 8 37 Q2 30 8 23 Q15 8 30 2 Z" 
+                  fill="url(#organicTexture-${specialist.id})"/>
+            
+            <!-- Figura humana personalizada -->
+            <g transform="translate(30, 30)">
+                <!-- Cabeça com variação de formato -->
+                ${variations.faceShape === 0 ? 
+                    `<ellipse cx="0" cy="-8" rx="7" ry="8" fill="white" opacity="0.95"/>` :
+                  variations.faceShape === 1 ? 
+                    `<circle cx="0" cy="-8" r="7.5" fill="white" opacity="0.95"/>` :
+                    `<path d="M-6 -15 Q0 -16 6 -15 Q8 -8 6 -2 Q0 0 -6 -2 Q-8 -8 -6 -15 Z" fill="white" opacity="0.95"/>`
+                }
+                
+                <!-- Cabelo personalizado -->
+                <g fill="white" opacity="0.7">
+                    ${isFemine ? 
+                        variations.hairStyle === 0 ? 
+                            `<path d="M-8 -16 Q-10 -18 -8 -20 Q0 -22 8 -20 Q10 -18 8 -16 Q6 -14 4 -12 Q0 -14 -4 -12 Q-6 -14 -8 -16 Z"/>` :
+                        variations.hairStyle === 1 ?
+                            `<path d="M-7 -15 Q-9 -17 -7 -19 Q-3 -21 0 -20 Q3 -21 7 -19 Q9 -17 7 -15 Q5 -13 2 -11 Q0 -13 -2 -11 Q-5 -13 -7 -15 Z"/>` :
+                            `<path d="M-6 -16 Q-8 -18 -6 -20 Q-2 -22 0 -21 Q2 -22 6 -20 Q8 -18 6 -16 Q4 -14 1 -12 Q0 -14 -1 -12 Q-4 -14 -6 -16 Z"/>` :
+                        variations.hairStyle === 0 ?
+                            `<path d="M-6 -15 Q0 -18 6 -15 Q8 -13 6 -11 Q0 -13 -6 -11 Q-8 -13 -6 -15 Z"/>` :
+                        variations.hairStyle === 1 ?
+                            `<path d="M-5 -16 Q0 -17 5 -16 Q7 -14 5 -12 Q0 -14 -5 -12 Q-7 -14 -5 -16 Z"/>` :
+                            `<path d="M-7 -15 Q0 -17 7 -15 Q8 -13 7 -11 Q0 -13 -7 -11 Q-8 -13 -7 -15 Z"/>`
+                    }
+                </g>
                 
                 <!-- Corpo -->
-                <path d="M15 45 Q15 35 22 32 Q30 30 38 32 Q45 35 45 45 L45 50 Q45 52 43 52 L17 52 Q15 52 15 50 Z"/>
+                <ellipse cx="0" cy="8" rx="12" ry="15" fill="white" opacity="0.9"/>
                 
-                ${isFemine ? `
-                    <!-- Cabelo feminino - mais ondulado -->
-                    <path d="M22 12 Q18 10 16 14 Q15 18 18 22 Q20 20 22 18 Q24 14 26 12 Q30 10 34 12 Q36 14 38 18 Q40 20 42 22 Q45 18 44 14 Q42 10 38 12 Q34 8 30 8 Q26 8 22 12 Z" opacity="0.8"/>
-                ` : `
-                    <!-- Cabelo masculino - mais curto -->
-                    <path d="M22 12 Q26 8 30 8 Q34 8 38 12 Q40 14 38 16 Q34 12 30 12 Q26 12 22 16 Q20 14 22 12 Z" opacity="0.8"/>
-                `}
+                <!-- Acessório baseado na personalidade -->
+                ${variations.accessories === 1 ? 
+                    `<g transform="translate(0, -8)" fill="white" opacity="0.6">
+                        ${colors.personality === 'analytical' ? 
+                            `<rect x="-8" y="-2" width="16" height="1" rx="0.5"/>` : // Óculos
+                        colors.personality === 'wise' ? 
+                            `<circle cx="0" cy="0" r="1" fill="none" stroke="white" stroke-width="0.5"/>` : // Círculo zen
+                            `<path d="M-2 2 Q0 0 2 2" stroke="white" stroke-width="0.5" fill="none"/>`} // Sorriso
+                    </g>` : ''
+                }
             </g>
             
-            <!-- Ícone da especialidade -->
-            <g transform="translate(38, 38)" fill="white" opacity="0.7">
-                ${specialist.specialty.includes('Psicologia') ? `
-                    <!-- Ícone de coração/mente -->
-                    <path d="M6 2 Q8 0 10 2 Q12 0 14 2 Q16 4 14 8 L10 12 L6 8 Q4 4 6 2 Z" transform="scale(0.8)"/>
-                ` : specialist.specialty === 'Nutrição' ? `
-                    <!-- Ícone de folha -->
-                    <path d="M10 2 Q14 2 16 6 Q16 10 12 14 Q8 12 6 8 Q6 4 10 2 Z M8 6 Q10 8 12 10" stroke="white" stroke-width="0.5" fill="none" transform="scale(0.8)"/>
-                ` : specialist.specialty === 'Acupuntura' ? `
-                    <!-- Ícone de agulha/energia -->
-                    <circle cx="10" cy="6" r="1.5"/>
-                    <circle cx="10" cy="10" r="1.5"/>
-                    <circle cx="10" cy="14" r="1.5"/>
-                    <path d="M6 10 L14 10 M8 8 L12 12 M8 12 L12 8" stroke="white" stroke-width="0.5" transform="scale(0.8)"/>
-                ` : `
-                    <!-- Ícone genérico de saúde -->
-                    <path d="M8 4 L12 4 L12 8 L16 8 L16 12 L12 12 L12 16 L8 16 L8 12 L4 12 L4 8 L8 8 Z" transform="scale(0.6)"/>
-                `}
+            <!-- Ícone da especialidade mais refinado -->
+            <g transform="translate(42, 42)" opacity="0.8">
+                <circle cx="6" cy="6" r="8" fill="${colors.accent}" opacity="0.3"/>
+                <g fill="white" transform="translate(2, 2)">
+                    ${specialist.specialty.includes('Psicologia') ? `
+                        <path d="M4 1 Q6 0 8 1 Q10 0 12 1 Q13 3 12 6 L8 10 L4 6 Q3 3 4 1 Z" transform="scale(0.6)"/>
+                        <circle cx="6" cy="4" r="1" fill="${colors.primary}" opacity="0.8"/>
+                    ` : specialist.specialty === 'Nutrição' ? `
+                        <path d="M6 1 Q9 1 11 4 Q11 7 8 10 Q5 8 3 5 Q3 2 6 1 Z" transform="scale(0.7)"/>
+                        <path d="M4 4 Q6 6 8 7" stroke="white" stroke-width="0.5" fill="none"/>
+                    ` : specialist.specialty === 'Acupuntura' ? `
+                        <circle cx="6" cy="3" r="1"/>
+                        <circle cx="6" cy="6" r="1"/>
+                        <circle cx="6" cy="9" r="1"/>
+                        <path d="M2 6 L10 6" stroke="white" stroke-width="0.5"/>
+                    ` : `
+                        <path d="M4 0 L8 0 L8 4 L12 4 L12 8 L8 8 L8 12 L4 12 L4 8 L0 8 L0 4 L4 4 Z" transform="scale(0.5)"/>
+                    `}
+                </g>
             </g>
         </svg>
     `;
@@ -1448,22 +1571,220 @@ class OrganicAnimations {
 // Instância global das animações
 const organicAnimations = new OrganicAnimations();
 
-// Função utilitária para criar divisores orgânicos
-function createOrganicDivider() {
+// ========================================
+// SISTEMA DE EFEITOS VISUAIS ORGÂNICOS
+// ========================================
+
+class OrganicEffects {
+    constructor() {
+        this.vantaEffect = null;
+        this.isVantaLoaded = typeof VANTA !== 'undefined';
+        this.sounds = {};
+        this.isHowlerLoaded = typeof Howl !== 'undefined';
+        
+        this.init();
+    }
+    
+    init() {
+        // Inicializa efeitos visuais após carregamento da página
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.initVisualEffects());
+        } else {
+            this.initVisualEffects();
+        }
+        
+        // Inicializa sons
+        this.initSounds();
+    }
+    
+    initVisualEffects() {
+        if (!this.isVantaLoaded) return;
+        
+        // Aguarda um momento para garantir que o DOM esteja estável
+        setTimeout(() => {
+            try {
+                this.vantaEffect = VANTA.FOG({
+                    el: document.body,
+                    mouseControls: false,
+                    touchControls: false,
+                    gyroControls: false,
+                    minHeight: window.innerHeight,
+                    minWidth: window.innerWidth,
+                    highlightColor: 0x80bba2, // --highlight-success
+                    midtoneColor: 0x5c5b7c,   // --text-main
+                    lowlightColor: 0xf8f4f2,  // Tons de fundo
+                    baseColor: 0xffffff,
+                    blurFactor: 0.4,
+                    speed: 0.8, // Muito lento e sutil
+                    zoom: 0.8
+                });
+            } catch (error) {
+                console.log('Vanta.js not available, continuing without background effects');
+            }
+        }, 100);
+    }
+    
+    initSounds() {
+        if (!this.isHowlerLoaded) return;
+        
+        try {
+            // Sons relaxantes e sutis (simulados com frequências)
+            this.sounds = {
+                // Som de gota d'água para seleção de data
+                waterDrop: new Howl({
+                    src: ['data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEcBTST2O/PeC4GM3nH8N2QQgcSUKvk5Kh6HQoJHuTv82YXCzNZufaLdBLMRV2OwRY='] 
+                }),
+                
+                // Som de sino suave para confirmações
+                chime: new Howl({
+                    src: ['data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEcBTST2O/PeC4GM3nH8N2QQgcSUKvk5Kh6HQoJHuTv82YXCzNZufaLdBLMRV2OwRY=']
+                }),
+                
+                // Som de clique suave para botões
+                softClick: new Howl({
+                    src: ['data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmEcBTST2O/PeC4GM3nH8N2QQgcSUKvk5Kh6HQoJHuTv82YXCzNZufaLdBLMRV2OwRY=']
+                })
+            };
+            
+            // Volume muito baixo para feedback subliminar
+            Object.values(this.sounds).forEach(sound => {
+                sound.volume(0.1);
+            });
+            
+        } catch (error) {
+            console.log('Howler.js not available, continuing without audio feedback');
+        }
+    }
+    
+    playSound(soundName) {
+        if (this.sounds[soundName] && this.isHowlerLoaded) {
+            this.sounds[soundName].play();
+        }
+    }
+    
+    destroy() {
+        if (this.vantaEffect) {
+            this.vantaEffect.destroy();
+        }
+    }
+}
+
+// Instância global dos efeitos orgânicos
+const organicEffects = new OrganicEffects();
+
+// ========================================
+// FORMAS ORGÂNICAS E DIVISORES SVG
+// ========================================
+
+// Função para criar divisores orgânicos variados
+function createOrganicDivider(type = 'wave', size = 'medium') {
+    const dividerTypes = {
+        wave: () => `
+            <path d="M0 20 Q100 8 200 20 Q300 32 400 20" stroke="url(#dividerGradient)" stroke-width="2" fill="none"/>
+            <path d="M0 25 Q100 13 200 25 Q300 37 400 25" stroke="url(#dividerGradient)" stroke-width="1" fill="none" opacity="0.5"/>
+        `,
+        
+        flow: () => `
+            <path d="M0 15 Q60 5 120 15 Q180 25 240 15 Q300 5 400 15" stroke="url(#dividerGradient)" stroke-width="2.5" fill="none"/>
+            <path d="M0 25 Q80 30 160 25 Q240 20 320 25 Q360 27 400 25" stroke="url(#dividerGradient)" stroke-width="1.5" fill="none" opacity="0.4"/>
+        `,
+        
+        breath: () => `
+            <path d="M0 20 Q50 12 100 20 Q150 28 200 20 Q250 12 300 20 Q350 28 400 20" stroke="url(#dividerGradient)" stroke-width="2" fill="none"/>
+            <circle cx="100" cy="20" r="2" fill="#80BBA2" opacity="0.3"/>
+            <circle cx="200" cy="20" r="2" fill="#80BBA2" opacity="0.3"/>
+            <circle cx="300" cy="20" r="2" fill="#80BBA2" opacity="0.3"/>
+        `,
+        
+        organic: () => `
+            <path d="M0 20 Q40 8 80 18 Q120 28 160 16 Q200 24 240 18 Q280 12 320 22 Q360 30 400 20" stroke="url(#dividerGradient)" stroke-width="2" fill="none"/>
+        `
+    };
+    
+    const sizes = {
+        small: { height: 30, viewBox: "0 0 400 30" },
+        medium: { height: 40, viewBox: "0 0 400 40" },
+        large: { height: 60, viewBox: "0 0 400 60" }
+    };
+    
+    const sizeConfig = sizes[size] || sizes.medium;
+    const dividerContent = dividerTypes[type] ? dividerTypes[type]() : dividerTypes.wave();
+    
     return `
-        <div class="organic-divider">
-            <svg viewBox="0 0 400 40" xmlns="http://www.w3.org/2000/svg">
+        <div class="organic-divider organic-divider--${type}">
+            <svg viewBox="${sizeConfig.viewBox}" height="${sizeConfig.height}" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <linearGradient id="dividerGradient-${type}" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" style="stop-color:#5C5B7C;stop-opacity:0" />
-                        <stop offset="20%" style="stop-color:#80BBA2;stop-opacity:0.3" />
+                        <stop offset="15%" style="stop-color:#80BBA2;stop-opacity:0.2" />
                         <stop offset="50%" style="stop-color:#80BBA2;stop-opacity:0.6" />
-                        <stop offset="80%" style="stop-color:#80BBA2;stop-opacity:0.3" />
+                        <stop offset="85%" style="stop-color:#80BBA2;stop-opacity:0.2" />
                         <stop offset="100%" style="stop-color:#5C5B7C;stop-opacity:0" />
                     </linearGradient>
+                    <filter id="dividerGlow-${type}">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge> 
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
                 </defs>
-                <path d="M0 20 Q100 10 200 20 Q300 30 400 20" stroke="url(#dividerGradient)" stroke-width="2" fill="none"/>
-                <path d="M0 25 Q100 15 200 25 Q300 35 400 25" stroke="url(#dividerGradient)" stroke-width="1" fill="none" opacity="0.5"/>
+                <g filter="url(#dividerGlow-${type})">
+                    ${dividerContent.replace(/dividerGradient/g, `dividerGradient-${type}`)}
+                </g>
+            </svg>
+        </div>
+    `;
+}
+
+// Função para criar formas orgânicas de fundo
+function createOrganicBlob(position = 'top-right', opacity = 0.05) {
+    const blobShapes = {
+        'top-right': 'M60 10 Q90 5 120 15 Q140 25 135 50 Q130 80 100 90 Q70 85 50 65 Q30 40 35 25 Q40 10 60 10',
+        'bottom-left': 'M10 60 Q5 90 15 120 Q25 140 50 135 Q80 130 90 100 Q85 70 65 50 Q40 30 25 35 Q10 40 10 60',
+        'center': 'M50 20 Q80 15 110 25 Q130 35 125 60 Q120 85 95 100 Q70 105 45 95 Q20 85 15 60 Q10 35 30 25 Q40 15 50 20',
+        'floating': 'M30 30 Q60 25 90 35 Q110 45 105 70 Q100 95 75 105 Q50 100 25 90 Q5 80 10 55 Q15 30 30 30'
+    };
+    
+    const positions = {
+        'top-right': { x: '70%', y: '10%', size: '200px' },
+        'bottom-left': { x: '10%', y: '70%', size: '180px' },
+        'center': { x: '50%', y: '50%', size: '250px' },
+        'floating': { x: '20%', y: '40%', size: '160px' }
+    };
+    
+    const pos = positions[position] || positions['top-right'];
+    const shape = blobShapes[position] || blobShapes['top-right'];
+    
+    return `
+        <div class="organic-blob organic-blob--${position}" style="
+            position: fixed;
+            top: ${pos.y};
+            left: ${pos.x};
+            width: ${pos.size};
+            height: ${pos.size};
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            pointer-events: none;
+        ">
+            <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="blobGradient-${position}" cx="0.4" cy="0.3" r="0.8">
+                        <stop offset="0%" style="stop-color:#80BBA2;stop-opacity:${opacity * 2}" />
+                        <stop offset="70%" style="stop-color:#5C5B7C;stop-opacity:${opacity}" />
+                        <stop offset="100%" style="stop-color:#5C5B7C;stop-opacity:0" />
+                    </radialGradient>
+                </defs>
+                <path d="${shape}" fill="url(#blobGradient-${position})" opacity="${opacity}">
+                    <animateTransform
+                        attributeName="transform"
+                        attributeType="XML"
+                        type="rotate"
+                        from="0 75 75"
+                        to="360 75 75"
+                        dur="120s"
+                        repeatCount="indefinite"/>
+                </path>
             </svg>
         </div>
     `;
