@@ -4,6 +4,27 @@
 
 Uma **Secretaria Digital** baseada em IA conversacional para clínicas de bem-estar, desenvolvida como MVP de um agente de atendimento modular. Combina **personalidade orgânica**, **inteligência artificial** e **interface de chat reativa** para criar uma experiência de atendimento acolhedora e eficiente.
 
+## 🚀 Início Rápido
+
+### 1. Configure sua API Key (Obrigatório)
+
+```bash
+# 1. Copie o arquivo de configuração
+copy config.example.js config.js
+
+# 2. Edite config.js e adicione sua API Key do Google Gemini
+# Obtenha sua key em: https://makersuite.google.com/app/apikey
+
+# 3. Execute um servidor local
+python -m http.server 8080
+
+# 4. Acesse http://localhost:8080
+```
+
+**🔐 Sua API key está protegida** - o arquivo `config.js` nunca será enviado para o GitHub!
+
+📖 **Documentação completa:** [SETUP_SEGURO.md](SETUP_SEGURO.md)
+
 ## ✨ Características Principais
 
 ### 🤖 **Agente de IA com Personalidade "Calma Orgânica"**

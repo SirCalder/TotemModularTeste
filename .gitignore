@@ -1,3 +1,13 @@
+# ========================================
+# TOTEM MODULAR AMANHECER - .gitignore
+# ========================================
+
+# Arquivos de configuração com API Keys - CRÍTICO!
+config.js
+.env
+.env.local
+.env.production
+
 # Logs
 logs
 *.log
