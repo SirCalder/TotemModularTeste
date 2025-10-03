@@ -409,6 +409,21 @@ function renderWelcomeScreen() {
 }
 
 function renderIdentificationScreen() {
+    // Detecta se vem do fluxo de agendamento ou check-in
+    const isSchedulingFlow = state.newAppointment && state.newAppointment.doctor;
+    
+    const title = isSchedulingFlow ? 
+        "Quase lá! Vamos nos conhecer" : 
+        "Bem-vindo! Vamos começar";
+    
+    const subtitle = isSchedulingFlow ? 
+        "Para finalizar seu agendamento, precisamos de alguns dados" :
+        "Para cuidar melhor de você, precisamos te conhecer";
+    
+    const contextMessage = isSchedulingFlow ?
+        `Sua consulta com ${state.newAppointment.doctor} está quase confirmada` :
+        "Suas informações estão seguras conosco";
+    
     return `
         <div class="screen" role="main" aria-labelledby="identification-title">
             <h2 id="identification-title" class="animate-fade-in-stagger-1">
@@ -416,11 +431,30 @@ function renderIdentificationScreen() {
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                 </svg>
-                Bem-vindo! Vamos começar
+                ${title}
             </h2>
-            <p class="animate-fade-in-stagger-2">Para cuidar melhor de você, precisamos te conhecer</p>
-            <p class="subtitle animate-fade-in-stagger-2">Suas informações estão seguras conosco</p>
+            <p class="animate-fade-in-stagger-2">${subtitle}</p>
+            <p class="subtitle animate-fade-in-stagger-2">${contextMessage}</p>
             
+            ${isSchedulingFlow ? `
+            <div class="appointment-summary animate-fade-in-stagger-2">
+                <div class="summary-header">
+                    <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    <span>RESUMO DO SEU AGENDAMENTO</span>
+                </div>
+                <div class="summary-details">
+                    <p><strong>Profissional:</strong> ${state.newAppointment.doctor}</p>
+                    <p><strong>Data:</strong> ${new Date(state.newAppointment.date).toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase()}</p>
+                    <p><strong>Horário:</strong> ${state.newAppointment.time}</p>
+                    <p><strong>Serviço:</strong> ${state.newAppointment.type || 'CONSULTA'}</p>
+                </div>
+            </div>
+            ` : `
             <div class="demo-hint animate-fade-in-stagger-2">
                 <p>
                     <svg class="feather-icon feather-icon-small" viewBox="0 0 24 24" stroke="currentColor" fill="none" aria-hidden="true">
@@ -430,6 +464,7 @@ function renderIdentificationScreen() {
                     <strong>Para demonstração, use nome "João Silva" e data 01/01/1990</strong>
                 </p>
             </div>
+            `}
             
             <div class="identification-form animate-fade-in-stagger-3">
                 <div class="input-container">
@@ -884,12 +919,40 @@ function addEventListeners() {
             
             // Simula 90% de sucesso
             if (Math.random() > 0.1) {
-                state.userData = { 
-                    ...mockUserData, 
-                    id: cpf,
-                    name: name, // Usa o nome inserido
-                    birthDate: birthDate
-                };
+                // Verifica se vem do fluxo de novo agendamento
+                if (state.newAppointment && state.newAppointment.doctor) {
+                    // JUNTA OS DADOS! - Fluxo de novo agendamento
+                    const appointmentDetails = state.newAppointment;
+                    const date = new Date(appointmentDetails.date);
+                    
+                    state.userData = { 
+                        id: 'Novo Agendamento', // Identifica que é um novo agendamento
+                        name: name,
+                        birthDate: birthDate,
+                        cpf: cpf,
+                        appointment: {
+                            doctor: appointmentDetails.doctor,
+                            time: appointmentDetails.time,
+                            date: date.toLocaleDateString('pt-BR'),
+                            type: appointmentDetails.type || 'Consulta',
+                            price: appointmentDetails.price
+                        },
+                    };
+                } else {
+                    // Fluxo de check-in (já existente)
+                    state.userData = { 
+                        ...mockUserData, 
+                        id: cpf,
+                        name: name,
+                        birthDate: birthDate
+                    };
+                }
+                
+                // Som de sucesso na validação
+                if (organicEffects) {
+                    organicEffects.playSound('success');
+                }
+                
                 changeScreen(Screen.CONFIRMATION);
             } else {
                 throw new Error('NÃO CONSEGUIMOS VALIDAR SEUS DADOS. TENTE NOVAMENTE.');
@@ -1176,20 +1239,19 @@ function addTimeSlotListeners(specialistId) {
         }
         
         const specialist = specialists.find(s => s.id === specialistId);
-        const date = new Date(state.newAppointment.date);
         
-        state.userData = {
-            id: 'Novo Agendamento',
-            name: state.userData?.name || 'Novo Paciente',
-            appointment: {
-                doctor: specialist.name,
-                time: state.newAppointment.time,
-                date: date.toLocaleDateString('pt-BR'),
-                type: state.newAppointment.type || 'Consulta',
-                price: specialist.price
-            },
-        };
-        changeScreen(Screen.CONFIRMATION);
+        // Armazena os detalhes da consulta no estado temporário
+        state.newAppointment.doctor = specialist.name;
+        state.newAppointment.price = specialist.price;
+        // state.newAppointment.type, date e time já foram guardados nos passos anteriores
+        
+        // Som de confirmação de seleção
+        if (organicEffects) {
+            organicEffects.playSound('chime');
+        }
+        
+        // Direciona para a tela de identificação para recolher os dados do novo utilizador
+        changeScreen(Screen.IDENTIFICATION);
     });
 }
 

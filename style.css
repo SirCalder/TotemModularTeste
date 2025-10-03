@@ -2005,6 +2005,82 @@ button:hover, .reason-card:hover, .feature-card:hover, .specialist-item:hover {
 }
 
 /* ========================================
+   RESUMO DE AGENDAMENTO NA IDENTIFICAÇÃO
+   ======================================== */
+
+.appointment-summary {
+    background: rgba(128, 187, 162, 0.1);
+    border: 1px solid rgba(128, 187, 162, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px 0;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.appointment-summary:hover {
+    background: rgba(128, 187, 162, 0.15);
+    transform: translateY(-1px);
+}
+
+.summary-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: var(--highlight-success);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+}
+
+.summary-header svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+}
+
+.summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.summary-details p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-details strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+    min-width: 90px;
+}
+
+/* Responsividade do resumo */
+@media (max-width: 480px) {
+    .appointment-summary {
+        padding: 16px;
+        margin: 16px 0;
+    }
+    
+    .summary-details p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .summary-details strong {
+        min-width: auto;
+        font-size: 0.8rem;
+    }
+}
+
+/* ========================================
    SELETOR DE TEMAS
    ======================================== */
 
